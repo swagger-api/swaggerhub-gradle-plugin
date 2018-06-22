@@ -1,0 +1,151 @@
+// * * * * * * * * * * * *
+// Plugins
+// * * * * * * * * * * * *
+
+plugins {
+    id 'groovy'
+    id 'java-gradle-plugin'
+
+    // Publishing publicly
+    id 'com.gradle.plugin-publish' version '0.9.10'
+
+    // Publishing to Artifactory
+    id 'maven-publish'
+}
+
+// * * * * * * * * * * * *
+// Dependencies
+// * * * * * * * * * * * *
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile     gradleApi()
+    compile group: 'com.squareup.okhttp', name: 'okhttp', version:'2.7.5'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.7'
+    testCompile group: 'com.github.tomakehurst', name: 'wiremock', version:'2.14.0'
+    testCompile gradleTestKit()
+    testCompile 'junit:junit:4+'
+    testCompile group: 'io.swagger', name: 'swagger-parser', version:'1.0.34'
+
+}
+
+// * * * * * * * * * * * *
+// Project configuration
+// * * * * * * * * * * * *
+
+project.description     = 'Gradle Plugin for SwaggerHub'
+project.group           = 'io.github.jsfrench'
+project.version         = '1.0.0-SNAPSHOT'
+
+project.ext.name        = 'swaggerhub'
+project.ext.pluginId    = 'com.praqma.demo.DemoPlugin'
+project.ext.scm         = 'scm:git@github.com:jsfrench/swaggerhub-gradle-plugin.git'
+project.ext.url         = 'https://github.com/jsfrench/swaggerhub-gradle-plugin'
+
+// Configuration for: java-gradle-plugin
+gradlePlugin {
+    plugins {
+        demoPlugin {
+            id = project.pluginId
+            implementationClass = 'com.praqma.demo.DemoPlugin'
+        }
+    }
+}
+
+// Configuration for: java-gradle-plugin
+//gradlePlugin {
+//    plugins {
+//        demoPlugin {
+//            id = project.pluginId
+//            implementationClass = 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin'
+//        }
+//    }
+//}
+
+// * * * * * * * * * * * *
+// Publishing
+// * * * * * * * * * * * *
+
+// Consult the accompanied blog post for information on publishing the plugin.
+// https://www.praqma.com/stories/gradle-plugin-bootstrap/
+
+// Publishing to plugins.gradle.org
+// --------------------------------
+
+// Configuration for: com.gradle.plugin-publish
+pluginBundle {
+    website = project.url
+    vcsUrl = project.scm
+    tags = ['demo', 'example', 'quickstart']
+
+    plugins {
+        demoPlugin {
+            displayName = 'Demo Custom Gradle Plugin '
+            description = project.description
+            id          = project.pluginId
+        }
+    }
+}
+
+// Publishing to Artifactory
+// -------------------------
+
+// Configures the publication to push, and the repository to push to
+publishing {
+    publications {
+        pluginPublication (MavenPublication) {
+            from        components.java
+            groupId     project.group
+            artifactId  project.name
+            version     project.version
+        }
+    }
+    repositories {
+        maven {
+            url project.rtfUrl
+            credentials {
+                username project.rtfUser
+                password project.rtfSecret
+            }
+        }
+    }
+}
+
+
+// ##### ORIGINAL #######
+//apply plugin: 'idea'
+//apply plugin: 'java'
+//apply plugin: 'maven-publish'
+//apply plugin: 'io.swagger.swaggerhub.plugin.SwaggerHubPlugin'
+//
+//group = 'io.github.jsfrench'
+//version = '1.0.0-SNAPSHOT'
+
+//description = """SwaggerHub Gradle Plugin"""
+
+//sourceCompatibility = 1.8
+//targetCompatibility = 1.8
+//tasks.withType(JavaCompile) {
+//	options.encoding = 'UTF-8'
+//}
+//
+//configurations.all {
+//}
+//repositories {
+//    mavenCentral()
+//}
+
+
+
+//// https://docs.gradle.org/current/userguide/java_gradle_plugin.html#plugins-tutorials
+//gradlePlugin {
+//    plugins {
+//        simplePlugin {
+//            id = 'org.gradle.sample.simple-plugin'
+//            implementationClass = 'org.gradle.sample.SimplePlugin'
+//        }
+//    }
+//}
