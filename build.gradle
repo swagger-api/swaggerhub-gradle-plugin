@@ -41,29 +41,24 @@ project.group           = 'io.github.jsfrench'
 project.version         = '1.0.0-SNAPSHOT'
 
 project.ext.name        = 'swaggerhub'
-project.ext.pluginId    = 'com.praqma.demo.DemoPlugin'
+//project.ext.pluginId    = 'com.praqma.demo.DemoPlugin'
+project.ext.pluginId    = 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin'
 project.ext.scm         = 'scm:git@github.com:jsfrench/swaggerhub-gradle-plugin.git'
 project.ext.url         = 'https://github.com/jsfrench/swaggerhub-gradle-plugin'
 
 // Configuration for: java-gradle-plugin
 gradlePlugin {
     plugins {
-        demoPlugin {
+//        demoPlugin {
+//            id = project.pluginId
+//            implementationClass = 'com.praqma.demo.DemoPlugin'
+//        }
+        swaggerhubPlugin {
             id = project.pluginId
-            implementationClass = 'com.praqma.demo.DemoPlugin'
+            implementationClass = 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin'
         }
     }
 }
-
-// Configuration for: java-gradle-plugin
-//gradlePlugin {
-//    plugins {
-//        demoPlugin {
-//            id = project.pluginId
-//            implementationClass = 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin'
-//        }
-//    }
-//}
 
 // * * * * * * * * * * * *
 // Publishing
@@ -82,8 +77,13 @@ pluginBundle {
     tags = ['demo', 'example', 'quickstart']
 
     plugins {
-        demoPlugin {
-            displayName = 'Demo Custom Gradle Plugin '
+//        demoPlugin {
+//            displayName = 'Demo Custom Gradle Plugin '
+//            description = project.description
+//            id          = project.pluginId
+//        }
+        swaggerhubPlugin {
+            displayName = 'SwaggerHub Gradle Plugin '
             description = project.description
             id          = project.pluginId
         }

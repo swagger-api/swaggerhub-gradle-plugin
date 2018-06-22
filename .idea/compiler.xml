@@ -4,6 +4,8 @@
     <bytecodeTargetLevel target="1.8">
       <module name="buildSrc_main" target="1.8" />
       <module name="buildSrc_test" target="1.8" />
+      <module name="demo_main" target="1.8" />
+      <module name="demo_test" target="1.8" />
       <module name="swaggerhub-gradle-plugin_main" target="1.8" />
       <module name="swaggerhub-gradle-plugin_test" target="1.8" />
     </bytecodeTargetLevel>
