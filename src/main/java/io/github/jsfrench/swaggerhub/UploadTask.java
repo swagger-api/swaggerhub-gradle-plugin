@@ -3,9 +3,12 @@ package io.github.jsfrench.swaggerhub;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.logging.Logging;
 import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
+import org.slf4j.Logger;
 
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -26,6 +29,7 @@ public class UploadTask extends DefaultTask {
     private int port = 443;
     private String protocol = "https";
     private String format = "json";
+    private static Logger LOGGER = Logging.getLogger(DownloadTask.class);
 
     private SwaggerHubClient swaggerHubClient;
 
@@ -65,7 +69,7 @@ public class UploadTask extends DefaultTask {
         this.token = token;
     }
 
-    @Input
+    @InputFile
     public String getInputFile() {
         return inputFile;
     }
@@ -74,7 +78,8 @@ public class UploadTask extends DefaultTask {
         this.inputFile = inputFile;
     }
 
-    @Input @Optional
+    @Input
+    @Optional
     public Boolean getPrivate() {
         return isPrivate;
     }
@@ -82,6 +87,8 @@ public class UploadTask extends DefaultTask {
     public void setPrivate(Boolean aPrivate) {
         isPrivate = aPrivate;
     }
+
+    @Input
     @Optional
     public String getHost() {
         return host;
@@ -91,6 +98,7 @@ public class UploadTask extends DefaultTask {
         this.host = host;
     }
 
+    @Input
     @Optional
     public int getPort() {
         return port;
@@ -100,6 +108,7 @@ public class UploadTask extends DefaultTask {
         this.port = port;
     }
 
+    @Input
     @Optional
     public String getProtocol() {
         return protocol;
@@ -109,6 +118,7 @@ public class UploadTask extends DefaultTask {
         this.protocol = protocol;
     }
 
+    @Input
     @Optional
     public String getFormat() {
         return format;
@@ -121,18 +131,18 @@ public class UploadTask extends DefaultTask {
     @TaskAction
     public void uploadDefinition() throws Exception {
 
-        System.out.println("EXECUTING SWAGGERHUB UPLOAD PLUGIN");
-        System.out.println(String.format("%s, %s, %s, %s, %s, %s, %s", api, owner, version, inputFile, format, host, token));
+//        System.out.println("EXECUTING SWAGGERHUB UPLOAD PLUGIN");
+//        System.out.println(String.format("%s, %s, %s, %s, %s, %s, %s", api, owner, version, inputFile, format, host, token));
 
         swaggerHubClient = new SwaggerHubClient(host, port, protocol, token);
 
-//        getLog().info("Uploading to " + host
-//                + ": api: " + api
-//                + ", owner: " + owner
-//                + ", version: " + version
-//                + ", inputFile: " + inputFile
-//                + ", format: " + format
-//                + ", isPrivate: " + isPrivate);
+        LOGGER.info("Uploading to " + host
+                + ": api: " + api
+                + ", owner: " + owner
+                + ", version: " + version
+                + ", inputFile: " + inputFile
+                + ", format: " + format
+                + ", isPrivate: " + isPrivate);
 
         try {
             String content = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
@@ -145,8 +155,7 @@ public class UploadTask extends DefaultTask {
 
             swaggerHubClient.saveDefinition(swaggerHubRequest);
         } catch (Exception e) {
-            throw new Exception(e.getMessage(), e);
-//            getLog().Exception("Failed to upload API definition", e);
+            LOGGER.error("Failed to upload API definition", e);
         }
     }
 }

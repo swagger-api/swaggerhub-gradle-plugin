@@ -4,9 +4,12 @@ package io.github.jsfrench.swaggerhub;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.logging.Logging;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Optional;
+import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -27,6 +30,7 @@ public class DownloadTask extends DefaultTask {
     private String host = "api.swaggerhub.com";
     private int port = 443;
     private String protocol = "https";
+    private static Logger LOGGER = Logging.getLogger(DownloadTask.class);
 
     @Input
     public String getOwner() {
@@ -56,6 +60,7 @@ public class DownloadTask extends DefaultTask {
     }
 
     @Input
+    @OutputFile
     public String getOutputFile() {
         return outputFile;
     }
@@ -65,7 +70,8 @@ public class DownloadTask extends DefaultTask {
     }
 
 
-    @Input @Optional
+    @Input
+    @Optional
     public String getHost() {
         return host;
     }
@@ -74,7 +80,8 @@ public class DownloadTask extends DefaultTask {
         this.host = host;
     }
 
-    @Input @Optional
+    @Input
+    @Optional
     public int getPort() {
         return port;
     }
@@ -83,7 +90,8 @@ public class DownloadTask extends DefaultTask {
         this.port = port;
     }
 
-    @Input @Optional
+    @Input
+    @Optional
     public String getProtocol() {
         return protocol;
     }
@@ -92,7 +100,8 @@ public class DownloadTask extends DefaultTask {
         this.protocol = protocol;
     }
 
-    @Input @Optional
+    @Input
+    @Optional
     public String getToken() {
         return token;
     }
@@ -101,7 +110,8 @@ public class DownloadTask extends DefaultTask {
         this.token = token;
     }
 
-    @Input @Optional
+    @Input
+    @Optional
     public String getFormat() {
         return format;
     }
@@ -113,16 +123,16 @@ public class DownloadTask extends DefaultTask {
     @TaskAction
     public void downloadDefinition() {
 
-        System.out.println("EXECUTING SWAGGERHUB DOWNLOAD PLUGIN");
-        System.out.println(String.format("%s, %s, %s, %s, %s, %s, %s", api, owner, version, outputFile, format, host, token));
+//        System.out.println("EXECUTING SWAGGERHUB DOWNLOAD PLUGIN");
+//        System.out.println(String.format("%s, %s, %s, %s, %s, %s, %s", api, owner, version, outputFile, format, host, token));
         SwaggerHubClient swaggerHubClient = new SwaggerHubClient(host, port, protocol, token);
-//
-//  getLog().info("Downloading from " + host
-//                + ": api-" + api
-//                + ", owner-" + owner
-//                + ", version-" + version
-//                + ", format-" + format
-//                + ", outputFile-" + outputFile);
+
+        LOGGER.info("Downloading from " + host
+                + ": api-" + api
+                + ", owner-" + owner
+                + ", version-" + version
+                + ", format-" + format
+                + ", outputFile-" + outputFile);
 
         SwaggerHubRequest swaggerHubRequest = new SwaggerHubRequest.Builder(api, owner, version)
                 .format(format)
@@ -138,8 +148,7 @@ public class DownloadTask extends DefaultTask {
             }
             Files.write(Paths.get(outputFile), swaggerJson.getBytes(Charset.forName("UTF-8")));
         } catch (Exception e) {
-//            throw new Exception("Failed to download API definition", e);
-            e.printStackTrace();
+            LOGGER.error("Failed to download API definition", e);
         }
     }
 }
