@@ -6,6 +6,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import org.gradle.api.GradleException;
 
 import java.io.IOException;
 
@@ -26,7 +27,7 @@ public class SwaggerHubClient {
         this.token = token;
     }
 
-    public String getDefinition(SwaggerHubRequest swaggerHubRequest) throws Exception {
+    public String getDefinition(SwaggerHubRequest swaggerHubRequest) throws GradleException {
         HttpUrl httpUrl = getDownloadUrl(swaggerHubRequest);
         MediaType mediaType = MediaType.parse("application/" + swaggerHubRequest.getFormat());
 
@@ -36,14 +37,12 @@ public class SwaggerHubClient {
         try {
             final Response response = client.newCall(requestBuilder).execute();
             if (!response.isSuccessful()) {
-                throw new Exception(
-                        String.format("Failed to download definition: %s", response.body().string())
-                );
+                throw new GradleException(String.format("Failed to download API definition: %s", response.body().string()));
             } else {
                 jsonResponse = response.body().string();
             }
         } catch (IOException e) {
-            throw new Exception("Failed to download definition", e);
+            throw new GradleException("Failed to download API definition", e);
         }
         return jsonResponse;
     }
@@ -59,7 +58,7 @@ public class SwaggerHubClient {
         return requestBuilder.build();
     }
 
-    public void saveDefinition(SwaggerHubRequest swaggerHubRequest) throws Exception {
+    public void saveDefinition(SwaggerHubRequest swaggerHubRequest) throws GradleException {
         HttpUrl httpUrl = getUploadUrl(swaggerHubRequest);
         MediaType mediaType = MediaType.parse("application/" + swaggerHubRequest.getFormat());
 
@@ -68,12 +67,12 @@ public class SwaggerHubClient {
         try {
             Response response = client.newCall(httpRequest).execute();
             if (!response.isSuccessful()) {
-                throw new Exception(
+                throw new GradleException(
                         String.format("Failed to upload definition: %s", response.body().string())
                 );
             }
         } catch (IOException e) {
-            throw new Exception("Failed to upload definition", e);
+            throw new GradleException("Failed to upload definition", e);
         }
         return;
     }

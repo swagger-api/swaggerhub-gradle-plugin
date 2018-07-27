@@ -2,6 +2,7 @@ package io.github.jsfrench.swaggerhub;
 
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.logging.Logging;
@@ -12,6 +13,7 @@ import org.gradle.api.tasks.TaskAction;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -121,10 +123,7 @@ public class DownloadTask extends DefaultTask {
     }
 
     @TaskAction
-    public void downloadDefinition() {
-
-//        System.out.println("EXECUTING SWAGGERHUB DOWNLOAD PLUGIN");
-//        System.out.println(String.format("%s, %s, %s, %s, %s, %s, %s", api, owner, version, outputFile, format, host, token));
+    public void downloadDefinition() throws GradleException {
         SwaggerHubClient swaggerHubClient = new SwaggerHubClient(host, port, protocol, token);
 
         LOGGER.info("Downloading from " + host
@@ -142,13 +141,17 @@ public class DownloadTask extends DefaultTask {
             String swaggerJson = swaggerHubClient.getDefinition(swaggerHubRequest);
             File file = new File(outputFile);
 
-            final File parentFile = file.getParentFile();
-            if (parentFile != null) {
-                parentFile.mkdirs();
-            }
+            setUpOutputDir(file);
             Files.write(Paths.get(outputFile), swaggerJson.getBytes(Charset.forName("UTF-8")));
-        } catch (Exception e) {
-            LOGGER.error("Failed to download API definition", e);
+        } catch (IOException | GradleException e) {
+            throw new GradleException(e.getMessage(), e);
+        }
+    }
+
+    private void setUpOutputDir(File file) {
+        final File parentFile = file.getParentFile();
+        if (parentFile != null) {
+            parentFile.mkdirs();
         }
     }
 }

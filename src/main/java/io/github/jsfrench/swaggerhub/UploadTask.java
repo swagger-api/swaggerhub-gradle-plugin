@@ -1,6 +1,7 @@
 package io.github.jsfrench.swaggerhub;
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.logging.Logging;
@@ -10,6 +11,7 @@ import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
 import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -129,10 +131,7 @@ public class UploadTask extends DefaultTask {
     }
 
     @TaskAction
-    public void uploadDefinition() throws Exception {
-
-//        System.out.println("EXECUTING SWAGGERHUB UPLOAD PLUGIN");
-//        System.out.println(String.format("%s, %s, %s, %s, %s, %s, %s", api, owner, version, inputFile, format, host, token));
+    public void uploadDefinition() throws GradleException {
 
         swaggerHubClient = new SwaggerHubClient(host, port, protocol, token);
 
@@ -154,8 +153,8 @@ public class UploadTask extends DefaultTask {
                     .build();
 
             swaggerHubClient.saveDefinition(swaggerHubRequest);
-        } catch (Exception e) {
-            LOGGER.error("Failed to upload API definition", e);
+        } catch (IOException | GradleException e) {
+            throw new GradleException(e.getMessage(), e);
         }
     }
 }
