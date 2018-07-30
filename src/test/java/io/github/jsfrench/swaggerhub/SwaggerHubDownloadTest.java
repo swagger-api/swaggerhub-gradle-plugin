@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -33,7 +34,7 @@ public class SwaggerHubDownloadTest {
         String downloadTask = "swaggerhubDownload";
 
         String buildFileContent = "plugins { id 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin' }\n" +
-                "swaggerhubDownload {\n" +
+                downloadTask + " {\n" +
                 "    api \'PetStoreAPI\'\n" +
                 "    owner \'jsfrench\'\n" +
                 "    version \'1.0.0\'\n" +

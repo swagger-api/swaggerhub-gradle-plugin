@@ -3,8 +3,11 @@ package io.github.jsfrench.swaggerhub;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.UrlPathPattern;
+import org.apache.commons.lang3.StringUtils;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
+import org.gradle.testkit.runner.TaskOutcome;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,6 +18,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,32 +41,76 @@ public class SwaggerHubUploadTest {
     @Rule
     public final TemporaryFolder testProjectDir = new TemporaryFolder();
     private File buildFile;
-    private String outputFile;
+    private String testInputAPI = "TestAPI.json";
+    private static String UPLOAD_TASK = "swaggerhubUpload";
+    String api = "TestAPI";
+    String owner = "testUser";
+    String version = "1.1.0";
+    String host = "localhost";
+    String port = "8089";
+    String protocol = "http";
+    String token = "dUmMyTokEn.1234abc";
+    String inputFile;
+    String swagger;
 
     @Before
-    public void setup() throws IOException {
+    public void setup() throws IOException, URISyntaxException {
         buildFile = testProjectDir.newFile("build.gradle");
+        copyInputFile(testInputAPI, testProjectDir.getRoot());
+        inputFile = String.format("%s/%s", testProjectDir.getRoot().toString(), testInputAPI);
+        swagger = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        wireMockServer.stop();
     }
 
     @Test
-    public void testSwaggerHubUploadTask() throws IOException, URISyntaxException {
-        copyInputFile("TestAPI.json", testProjectDir.getRoot());
-        outputFile = testProjectDir.getRoot().toString() + "/testAPI.json";
-        String uploadTask = "swaggerhubUpload";
+    public void testSwaggerHubUploadTask() throws IOException {
         SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
-                .isPrivate(false)
-                .
+                .swagger(swagger)
+                .build();
 
+        setupServerMocking(request, host, port, protocol, token);
+        assertEquals(SUCCESS, runBuild(request));
+    }
+
+    @Test
+    public void testUploadPrivate() throws IOException, URISyntaxException {
+        SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
+                .isPrivate(true)
+                .swagger(swagger)
+                .build();
+
+        setupServerMocking(request, host, port, protocol, token);
+        assertEquals(SUCCESS, runBuild(request));
+    }
+
+    @Test
+    public void testUploadYaml() throws Exception {
+        SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
+                .format("yaml")
+                .swagger(swagger)
+                .build();
+
+        setupServerMocking(request, host, port, protocol, token);
+        assertEquals(SUCCESS, runBuild(request));
+    }
+
+    private TaskOutcome runBuild(SwaggerHubRequest request) throws IOException {
         String buildFileContent = "plugins { id 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin' }\n" +
-                uploadTask + " {\n" +
-                "    host \'localhost\'\n" +
-                "    port \'8089\'\n" +
-                "    protocol \'http\'\n" +
-                "    api \'TestAPI\'\n" +
-                "    owner \'testUser\'\n" +
-                "    version \'1.1.0\'\n" +
-                "    inputFile \'" + testProjectDir.getRoot().toString() + "/TestAPI.json\'\n" +
-                "    token \'dUmMyTokEn.1234abc\'\n" +
+                UPLOAD_TASK + " {\n" +
+                "    host \'" + host + "\'\n" +
+                "    port \'" + port + "\'\n" +
+                "    protocol \'" + protocol + "\'\n" +
+                "    api \'" + request.getApi() + "\'\n" +
+                "    owner \'" + request.getOwner() + "\'\n" +
+                "    version \'" + request.getVersion() + "\'\n" +
+                getFormatSetting(request.getFormat()) +
+                getIsPrivateSetting(request.isPrivate()) +
+                "    inputFile \'" + inputFile + "\'\n" +
+                "    token \'" + token + "\'\n" +
                 "}";
 
         writeFile(buildFile, buildFileContent);
@@ -70,10 +118,20 @@ public class SwaggerHubUploadTest {
         BuildResult result = GradleRunner.create()
                 .withPluginClasspath()
                 .withProjectDir(testProjectDir.getRoot())
-                .withArguments(uploadTask, "--stacktrace")
+                .withArguments(UPLOAD_TASK, "--stacktrace")
                 .build();
 
-        assertEquals(SUCCESS, result.task(":" + uploadTask).getOutcome());
+        return result.task(":" + UPLOAD_TASK).getOutcome();
+    }
+
+    private String getIsPrivateSetting(Boolean isPrivate) {
+        // false is default, so only include if set to true
+        return isPrivate ? String.format("   isPrivate \'%s\'\n", Boolean.toString(isPrivate)) :  "";
+    }
+
+    private String getFormatSetting(String format) {
+        // json is default, so only include if set to yaml
+        return StringUtils.isNotBlank(format) && format.equals("yaml") ? String.format("   format \'%s\'\n", format) :  "";
     }
 
     private void writeFile(File destination, String content) throws IOException {
@@ -113,7 +171,8 @@ public class SwaggerHubUploadTest {
                 .withHeader("Content-Type", equalToIgnoreCase(
                         String.format("application/%s; charset=UTF-8", format != null ? format : "json")))
                 .withHeader("Authorization", equalTo(token))
-                .withHeader("User-Agent", equalTo("swaggerhub-maven-plugin"))
+                .withHeader("User-Agent", equalTo("swaggerhub-gradle-plugin"))
+                .withRequestBody(equalTo(request.getSwagger()))
                 .willReturn(created()));
 
         return url;
