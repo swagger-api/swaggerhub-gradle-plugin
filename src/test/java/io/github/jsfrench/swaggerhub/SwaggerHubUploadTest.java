@@ -102,7 +102,7 @@ public class SwaggerHubUploadTest {
         String buildFileContent = "plugins { id 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin' }\n" +
                 UPLOAD_TASK + " {\n" +
                 "    host \'" + host + "\'\n" +
-                "    port \'" + port + "\'\n" +
+                "    port " + port + "\n" +
                 "    protocol \'" + protocol + "\'\n" +
                 "    api \'" + request.getApi() + "\'\n" +
                 "    owner \'" + request.getOwner() + "\'\n" +
@@ -126,7 +126,7 @@ public class SwaggerHubUploadTest {
 
     private String getIsPrivateSetting(Boolean isPrivate) {
         // false is default, so only include if set to true
-        return isPrivate ? String.format("   isPrivate \'%s\'\n", Boolean.toString(isPrivate)) :  "";
+        return isPrivate ? String.format("   isPrivate %s\n", Boolean.toString(isPrivate)) :  "";
     }
 
     private String getFormatSetting(String format) {

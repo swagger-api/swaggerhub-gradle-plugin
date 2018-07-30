@@ -82,12 +82,12 @@ public class UploadTask extends DefaultTask {
 
     @Input
     @Optional
-    public Boolean getPrivate() {
+    public Boolean isPrivate() {
         return isPrivate;
     }
 
-    public void setPrivate(Boolean aPrivate) {
-        isPrivate = aPrivate;
+    public void isPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     @Input
