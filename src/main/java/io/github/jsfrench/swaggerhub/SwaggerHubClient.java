@@ -51,7 +51,7 @@ public class SwaggerHubClient {
         Request.Builder requestBuilder = new Request.Builder()
                 .url(httpUrl)
                 .addHeader("Accept", mediaType.toString())
-                .addHeader("User-Agent", "swaggerhub-maven-plugin");
+                .addHeader("User-Agent", "swaggerhub-gradle-plugin");
         if (token != null) {
             requestBuilder.addHeader("Authorization", token);
         }
@@ -82,7 +82,7 @@ public class SwaggerHubClient {
                 .url(httpUrl)
                 .addHeader("Content-Type", mediaType.toString())
                 .addHeader("Authorization", token)
-                .addHeader("User-Agent", "swaggerhub-maven-plugin")
+                .addHeader("User-Agent", "swaggerhub-gradle-plugin")
                 .post(RequestBody.create(mediaType, content))
                 .build();
     }
