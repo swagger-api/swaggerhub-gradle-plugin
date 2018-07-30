@@ -43,15 +43,15 @@ public class SwaggerHubUploadTest {
     private File buildFile;
     private String testInputAPI = "TestAPI.json";
     private static String UPLOAD_TASK = "swaggerhubUpload";
-    String api = "TestAPI";
-    String owner = "testUser";
-    String version = "1.1.0";
-    String host = "localhost";
-    String port = "8089";
-    String protocol = "http";
-    String token = "dUmMyTokEn.1234abc";
-    String inputFile;
-    String swagger;
+    private String api = "TestAPI";
+    private String owner = "testUser";
+    private String version = "1.1.0";
+    private String host = "localhost";
+    private String port = "8089";
+    private String protocol = "http";
+    private String token = "dUmMyTokEn.1234abc";
+    private String inputFile;
+    private String swagger;
 
     @Before
     public void setup() throws IOException, URISyntaxException {
@@ -109,7 +109,19 @@ public class SwaggerHubUploadTest {
     }
 
     private TaskOutcome runBuild(SwaggerHubRequest request) throws IOException {
-        String buildFileContent = "plugins { id 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin' }\n" +
+        createBuildFile(request);
+
+        BuildResult result = GradleRunner.create()
+                .withPluginClasspath()
+                .withProjectDir(testProjectDir.getRoot())
+                .withArguments(UPLOAD_TASK, "--stacktrace")
+                .build();
+
+        return result.task(":" + UPLOAD_TASK).getOutcome();
+    }
+
+    private String createBuildFile(SwaggerHubRequest request) throws IOException {
+        String buildFileContent =  "plugins { id 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin' }\n" +
                 UPLOAD_TASK + " {\n" +
                 "    host \'" + host + "\'\n" +
                 "    port " + port + "\n" +
@@ -125,23 +137,17 @@ public class SwaggerHubUploadTest {
 
         writeFile(buildFile, buildFileContent);
 
-        BuildResult result = GradleRunner.create()
-                .withPluginClasspath()
-                .withProjectDir(testProjectDir.getRoot())
-                .withArguments(UPLOAD_TASK, "--stacktrace")
-                .build();
-
-        return result.task(":" + UPLOAD_TASK).getOutcome();
+        return buildFileContent;
     }
 
     private String getIsPrivateSetting(Boolean isPrivate) {
         // false is default, so only include if set to true
-        return isPrivate ? String.format("   isPrivate %s\n", Boolean.toString(isPrivate)) :  "";
+        return isPrivate ? String.format("   isPrivate %s\n", Boolean.toString(isPrivate)) : "";
     }
 
     private String getFormatSetting(String format) {
         // json is default, so only include if set to yaml
-        return StringUtils.isNotBlank(format) && format.equals("yaml") ? String.format("   format \'%s\'\n", format) :  "";
+        return StringUtils.isNotBlank(format) && format.equals("yaml") ? String.format("   format \'%s\'\n", format) : "";
     }
 
     private void writeFile(File destination, String content) throws IOException {
