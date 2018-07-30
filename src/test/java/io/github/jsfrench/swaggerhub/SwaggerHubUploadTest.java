@@ -56,9 +56,6 @@ public class SwaggerHubUploadTest {
     @Before
     public void setup() throws IOException, URISyntaxException {
         buildFile = testProjectDir.newFile("build.gradle");
-        copyInputFile(testInputAPI, testProjectDir.getRoot());
-        inputFile = String.format("%s/%s", testProjectDir.getRoot().toString(), testInputAPI);
-        swagger = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
     }
 
     @After
@@ -67,7 +64,11 @@ public class SwaggerHubUploadTest {
     }
 
     @Test
-    public void testSwaggerHubUploadTask() throws IOException {
+    public void testUpload() throws IOException, URISyntaxException {
+        copyInputFile(testInputAPI, testProjectDir.getRoot());
+        inputFile = String.format("%s/%s", testProjectDir.getRoot().toString(), testInputAPI);
+        swagger = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
+
         SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
                 .swagger(swagger)
                 .build();
@@ -78,6 +79,10 @@ public class SwaggerHubUploadTest {
 
     @Test
     public void testUploadPrivate() throws IOException, URISyntaxException {
+        copyInputFile(testInputAPI, testProjectDir.getRoot());
+        inputFile = String.format("%s/%s", testProjectDir.getRoot().toString(), testInputAPI);
+        swagger = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
+
         SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
                 .isPrivate(true)
                 .swagger(swagger)
@@ -89,6 +94,11 @@ public class SwaggerHubUploadTest {
 
     @Test
     public void testUploadYaml() throws Exception {
+        testInputAPI = "TestAPI.yaml";
+        copyInputFile(testInputAPI, testProjectDir.getRoot());
+        inputFile = String.format("%s/%s", testProjectDir.getRoot().toString(), testInputAPI);
+        swagger = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
+
         SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
                 .format("yaml")
                 .swagger(swagger)
