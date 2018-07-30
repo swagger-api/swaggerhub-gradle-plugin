@@ -127,11 +127,11 @@ public class DownloadTask extends DefaultTask {
         SwaggerHubClient swaggerHubClient = new SwaggerHubClient(host, port, protocol, token);
 
         LOGGER.info("Downloading from " + host
-                + ": api-" + api
-                + ", owner-" + owner
-                + ", version-" + version
-                + ", format-" + format
-                + ", outputFile-" + outputFile);
+                + ": api:" + api
+                + ", owner:" + owner
+                + ", version:" + version
+                + ", format:" + format
+                + ", outputFile:" + outputFile);
 
         SwaggerHubRequest swaggerHubRequest = new SwaggerHubRequest.Builder(api, owner, version)
                 .format(format)
