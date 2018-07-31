@@ -39,8 +39,7 @@ project.group           = 'io.github.jsfrench'
 project.version         = '1.0.0-SNAPSHOT'
 
 project.ext.name        = 'swaggerhub'
-//project.ext.pluginId    = 'com.praqma.demo.DemoPlugin'
-project.ext.pluginId    = 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin'
+project.ext.pluginId    = 'io.swagger.swaggerhub.gradle.SwaggerHubPlugin'
 project.ext.scm         = 'scm:git@github.com:jsfrench/swaggerhub-gradle-plugin.git'
 project.ext.url         = 'https://github.com/jsfrench/swaggerhub-gradle-plugin'
 
@@ -49,7 +48,7 @@ gradlePlugin {
     plugins {
         swaggerhubPlugin {
             id = project.pluginId
-            implementationClass = 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin'
+            implementationClass = 'io.swagger.swaggerhub.gradle.SwaggerHubPlugin'
         }
     }
 }

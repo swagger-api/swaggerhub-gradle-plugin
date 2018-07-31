@@ -1,5 +1,7 @@
-package io.github.jsfrench.swaggerhub;
+package io.swagger.swaggerhub.gradle;
 
+import io.swagger.swaggerhub.gradle.tasks.DownloadTask;
+import io.swagger.swaggerhub.gradle.tasks.UploadTask;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 

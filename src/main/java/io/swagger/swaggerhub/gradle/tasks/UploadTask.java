@@ -1,9 +1,9 @@
-package io.github.jsfrench.swaggerhub;
+package io.swagger.swaggerhub.gradle.tasks;
 
+import io.swagger.swaggerhub.gradle.client.SwaggerHubClient;
+import io.swagger.swaggerhub.gradle.client.SwaggerHubRequest;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
-import org.gradle.api.Plugin;
-import org.gradle.api.Project;
 import org.gradle.api.logging.Logging;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;

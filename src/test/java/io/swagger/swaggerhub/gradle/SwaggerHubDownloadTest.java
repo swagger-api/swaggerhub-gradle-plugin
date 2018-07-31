@@ -1,4 +1,4 @@
-package io.github.jsfrench.swaggerhub;
+package io.swagger.swaggerhub.gradle;
 
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
@@ -33,7 +33,7 @@ public class SwaggerHubDownloadTest {
         outputFile = testProjectDir.getRoot().toString() + "/testAPI.json";
         String downloadTask = "swaggerhubDownload";
 
-        String buildFileContent = "plugins { id 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin' }\n" +
+        String buildFileContent = "plugins { id 'io.swagger.swaggerhub.gradle.SwaggerHubPlugin' }\n" +
                 downloadTask + " {\n" +
                 "    api \'PetStoreAPI\'\n" +
                 "    owner \'jsfrench\'\n" +

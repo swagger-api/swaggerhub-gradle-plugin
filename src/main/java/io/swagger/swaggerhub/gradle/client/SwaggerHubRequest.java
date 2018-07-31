@@ -1,4 +1,4 @@
-package io.github.jsfrench.swaggerhub;
+package io.swagger.swaggerhub.gradle.client;
 
 
 public class SwaggerHubRequest {

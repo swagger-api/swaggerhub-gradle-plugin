@@ -32,7 +32,7 @@ The pattern of usage is likely to depend on whether a [code first or design firs
 * Download a public API definition in json format from SwaggerHub and save to a local file.
 ```
 plugins {
-    id 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin'
+    id 'io.swagger.swaggerhub.gradle.SwaggerHubPlugin'
 }
 swaggerhubDownload {
     api 'PetStoreAPI'
@@ -63,7 +63,7 @@ Parameter | Description | Required | Default
 
 ```
 plugins {
-    id 'io.github.jsfrench.swaggerhub.SwaggerHubPlugin'
+    id 'io.swagger.swaggerhub.gradle.SwaggerHubPlugin'
 }
 
 swaggerhubUpload {
