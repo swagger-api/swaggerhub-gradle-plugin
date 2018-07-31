@@ -8,14 +8,36 @@ A simple gradle plugin to integrate [SwaggerHub](https:\\swaggerhub.com) hosting
 * Authenticate with API key for restricted operations (e.g downloading a private API definition).
 * Connects to SwaggerHub cloud by default or local SwaggerHub instance through optional configuration.
 
+## Installation
+### Gradle 2.1 and higher
+
+```
+plugins {
+  id "io.swagger.swaggerhub" version "1.0.1"
+}
+```
+### Gradle 1.x and 2.0
+
+```
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "gradle.plugin.io.swagger:swaggerhub:1.0.1"
+  }
+}
+
+apply plugin: "io.swagger.swaggerhub"
+```
+
 ## Tasks
 ### swaggerhubDownload
 #### Example Usage
 * Download a public API definition in json format from SwaggerHub and save to a local file.
 ```
-plugins {
-    id 'io.swagger.swaggerhub'
-}
 swaggerhubDownload {
     api 'PetStoreAPI'
     owner 'jsfrench'
@@ -44,10 +66,6 @@ Parameter | Description | Required | Default
 * Upload an API definition in json format as a public API in SwaggerHub.
 
 ```
-plugins {
-    id 'io.swagger.swaggerhub'
-}
-
 swaggerhubUpload {
     api 'PetStoreAPI'
     owner 'jsfrench'
