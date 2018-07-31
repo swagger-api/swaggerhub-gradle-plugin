@@ -8,24 +8,6 @@ A simple gradle plugin to access [SwaggerHub](https:\\swaggerhub.com) hosting of
 * Authenticate with API key for restricted operations (e.g downloading a private API definition).
 * Connects to SwaggerHub cloud by default or local SwaggerHub instance through optional configuration.
 
-The pattern of usage is likely to depend on whether a [code first or design first](https://swaggerhub.com/blog/api-design/design-first-or-code-first-api-development/) approach is followed.
-
-## Example use cases
-
-### Code First
-1. Code API implementation.
-2. Automatically generate API definition from implementation, e.g. via annotations from [swagger-core](https://github.com/swagger-api/swagger-core).
-3. Upload generated API definition to SwaggerHub with swaggerhub-gradle-plugin.
-
-### Design First
-1. Write API definition (e.g. in Swagger Editor or SwaggerHub).
-2. Download API definition with swaggerhub-gradle-plugin.
-3. Pass API definition to another Swagger tool e.g.
-    - [swagger-codegen-maven-plugin](https://github.com/swagger-api/swagger-codegen/tree/master/modules/swagger-codegen-maven-plugin) to generate API client and resource classes.
-    - [swagger-inflector](https://github.com/swagger-api/swagger-inflector) to automatically wire up the API definition to the implementation and provide out-of-the-box mocking.
-
-
-
 ## Tasks
 ### swaggerhubDownload
 #### Example Usage
