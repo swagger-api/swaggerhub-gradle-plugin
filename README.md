@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/swagger-api/swaggerhub-gradle-plugin.svg)](https://travis-ci.org/swagger-api/swaggerhub-gradle-plugin)
 # swaggerhub-gradle-plugin
-A simple gradle plugin to access [SwaggerHub](https:\\swaggerhub.com) hosting of [OpenAPI/Swagger](https://swagger.io/specification/) from a gradle build process, primarily to integrate with other OpenAPI/Swagger gradle tooling.
+A simple gradle plugin to integrate [SwaggerHub](https:\\swaggerhub.com) hosting of [OpenAPI/Swagger](https://swagger.io/specification/) definitions with a gradle build process, using the [SwaggerHub API](https://app.swaggerhub.com/apis/swagger-hub/registry-api).
 
 ## Features
 * Download/upload API definitions from/to SwaggerHub.
@@ -14,7 +14,7 @@ A simple gradle plugin to access [SwaggerHub](https:\\swaggerhub.com) hosting of
 * Download a public API definition in json format from SwaggerHub and save to a local file.
 ```
 plugins {
-    id 'io.swagger.swaggerhub.gradle.SwaggerHubPlugin'
+    id 'io.swagger.swaggerhub'
 }
 swaggerhubDownload {
     api 'PetStoreAPI'
@@ -45,7 +45,7 @@ Parameter | Description | Required | Default
 
 ```
 plugins {
-    id 'io.swagger.swaggerhub.gradle.SwaggerHubPlugin'
+    id 'io.swagger.swaggerhub'
 }
 
 swaggerhubUpload {
