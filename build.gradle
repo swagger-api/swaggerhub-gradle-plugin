@@ -37,7 +37,6 @@ dependencies {
 
 project.description     = 'Gradle Plugin for SwaggerHub'
 project.group           = 'io.swagger'
-project.version         = '1.0.0-SNAPSHOT'
 
 project.ext.name        = 'swaggerhub'
 project.ext.pluginId    = 'io.swagger.swaggerhub'
