@@ -110,3 +110,8 @@ gradle-app.setting
 # End of https://www.gitignore.io/api/java,gradle,intellij
 
 .idea/modules
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr

@@ -76,27 +76,3 @@ pluginBundle {
         }
     }
 }
-
-// Publishing to Artifactory
-// -------------------------
-
-// Configures the publication to push, and the repository to push to
-publishing {
-    publications {
-        pluginPublication (MavenPublication) {
-            from        components.java
-            groupId     project.group
-            artifactId  project.name
-            version     project.version
-        }
-    }
-    repositories {
-        maven {
-            url project.rtfUrl
-            credentials {
-                username project.rtfUser
-                password project.rtfSecret
-            }
-        }
-    }
-}
