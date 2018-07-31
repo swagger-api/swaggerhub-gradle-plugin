@@ -5,6 +5,7 @@
 plugins {
     id 'groovy'
     id 'java-gradle-plugin'
+    id 'net.researchgate.release' version '2.6.0'
     // Publishing publicly
     id 'com.gradle.plugin-publish' version '0.9.10'
     // Publishing to Artifactory
