@@ -62,7 +62,6 @@ public class DownloadTask extends DefaultTask {
     }
 
     @Input
-    @OutputFile
     public String getOutputFile() {
         return outputFile;
     }
@@ -70,7 +69,6 @@ public class DownloadTask extends DefaultTask {
     public void setOutputFile(String outputFile) {
         this.outputFile = outputFile;
     }
-
 
     @Input
     @Optional
