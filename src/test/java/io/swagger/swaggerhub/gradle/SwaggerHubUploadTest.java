@@ -3,7 +3,7 @@ package io.swagger.swaggerhub.gradle;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.UrlPathPattern;
-import io.swagger.swaggerhub.gradle.client.SwaggerHubRequest;
+import io.swagger.swaggerhub.client.SwaggerHubRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
@@ -122,7 +122,7 @@ public class SwaggerHubUploadTest {
     }
 
     private String createBuildFile(SwaggerHubRequest request) throws IOException {
-        String buildFileContent =  "plugins { id 'io.swagger.swaggerhub.gradle.SwaggerHubPlugin' }\n" +
+        String buildFileContent =  "plugins { id 'io.swagger.swaggerhub' }\n" +
                 UPLOAD_TASK + " {\n" +
                 "    host \'" + host + "\'\n" +
                 "    port " + port + "\n" +

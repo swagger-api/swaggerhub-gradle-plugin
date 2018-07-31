@@ -35,20 +35,20 @@ dependencies {
 // * * * * * * * * * * * *
 
 project.description     = 'Gradle Plugin for SwaggerHub'
-project.group           = 'io.github.jsfrench'
+project.group           = 'io.swagger'
 project.version         = '1.0.0-SNAPSHOT'
 
 project.ext.name        = 'swaggerhub'
-project.ext.pluginId    = 'io.swagger.swaggerhub.gradle.SwaggerHubPlugin'
-project.ext.scm         = 'scm:git@github.com:jsfrench/swaggerhub-gradle-plugin.git'
-project.ext.url         = 'https://github.com/jsfrench/swaggerhub-gradle-plugin'
+project.ext.pluginId    = 'io.swagger.swaggerhub'
+project.ext.scm         = 'scm:git@github.com:swagger-api/swaggerhub-gradle-plugin.git'
+project.ext.url         = 'https://github.com/swagger-api/swaggerhub-gradle-plugin'
 
 // Configuration for: java-gradle-plugin
 gradlePlugin {
     plugins {
-        swaggerhubPlugin {
+        swaggerhub {
             id = project.pluginId
-            implementationClass = 'io.swagger.swaggerhub.gradle.SwaggerHubPlugin'
+            implementationClass = 'io.swagger.swaggerhub.SwaggerHubPlugin'
         }
     }
 }
@@ -57,8 +57,6 @@ gradlePlugin {
 // Publishing
 // * * * * * * * * * * * *
 
-// Consult the accompanied blog post for information on publishing the plugin.
-// https://www.praqma.com/stories/gradle-plugin-bootstrap/
 
 // Publishing to plugins.gradle.org
 // --------------------------------
@@ -67,7 +65,7 @@ gradlePlugin {
 pluginBundle {
     website = project.url
     vcsUrl = project.scm
-    tags = ['demo', 'example', 'quickstart']
+    tags = ['swagger', 'swaggerhub', 'openapi', 'api']
 
     plugins {
         swaggerhubPlugin {

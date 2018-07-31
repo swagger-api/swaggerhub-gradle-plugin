@@ -1,4 +1,4 @@
-package io.swagger.swaggerhub.gradle.client;
+package io.swagger.swaggerhub.client;
 
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.MediaType;
@@ -7,6 +7,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import org.gradle.api.GradleException;
+import io.swagger.swaggerhub.client.SwaggerHubRequest;
 
 import java.io.IOException;
 

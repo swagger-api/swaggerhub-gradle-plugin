@@ -1,8 +1,8 @@
-package io.swagger.swaggerhub.gradle.tasks;
+package io.swagger.swaggerhub.tasks;
 
 
-import io.swagger.swaggerhub.gradle.client.SwaggerHubClient;
-import io.swagger.swaggerhub.gradle.client.SwaggerHubRequest;
+import io.swagger.swaggerhub.client.SwaggerHubClient;
+import io.swagger.swaggerhub.client.SwaggerHubRequest;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
 import org.gradle.api.logging.Logging;

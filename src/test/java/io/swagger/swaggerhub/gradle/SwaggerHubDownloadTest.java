@@ -33,7 +33,7 @@ public class SwaggerHubDownloadTest {
         outputFile = testProjectDir.getRoot().toString() + "/testAPI.json";
         String downloadTask = "swaggerhubDownload";
 
-        String buildFileContent = "plugins { id 'io.swagger.swaggerhub.gradle.SwaggerHubPlugin' }\n" +
+        String buildFileContent = "plugins { id 'io.swagger.swaggerhub' }\n" +
                 downloadTask + " {\n" +
                 "    api \'PetStoreAPI\'\n" +
                 "    owner \'jsfrench\'\n" +
