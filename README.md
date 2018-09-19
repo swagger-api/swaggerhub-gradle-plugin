@@ -8,6 +8,22 @@ A simple gradle plugin to integrate [SwaggerHub](https:\\swaggerhub.com) hosting
 * Authenticate with API key for restricted operations (e.g downloading a private API definition).
 * Connects to SwaggerHub cloud by default or local SwaggerHub instance through optional configuration.
 
+The pattern of usage is likely to depend on whether a [code first or design first](https://swaggerhub.com/blog/api-design/design-first-or-code-first-api-development/) approach is followed.
+
+## Example use cases
+
+### Code First
+1. Code API implementation.
+2. Automatically generate API definition from implementation, e.g. via [swagger-core](https://github.com/swagger-api/swagger-core) [annotations](https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Annotations) and [swagger gradle plugin](https://github.com/swagger-api/swagger-core/tree/master/modules/swagger-gradle-plugin). See also [swagger-core wiki](https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Getting-started)
+3. Upload generated API definition to SwaggerHub with swaggerhub-gradle-plugin.
+
+### Design First
+1. Write API definition (e.g. in Swagger Editor or SwaggerHub).
+2. Download API definition with swaggerhub-gradle-plugin.
+3. Pass API definition to another Swagger tool e.g.
+    - [swagger-codegen](https://github.com/swagger-api/swagger-codegen) to generate API client and resource classes.
+    - [swagger-inflector](https://github.com/swagger-api/swagger-inflector) to automatically wire up the API definition to the implementation and provide out-of-the-box mocking.
+
 ## Installation
 ### Gradle 2.1 and higher
 
@@ -67,6 +83,39 @@ Parameter | Description | Required | Default
 
 ```
 swaggerhubUpload {
+    api 'PetStoreAPI'
+    owner 'jsfrench'
+    version '1.0.1-SNAPSHOT'
+    inputFile 'target/petStoreAPI.json'
+    token  'duMmyAPiKEy'
+}
+```
+
+#### Example Usage together with `swagger-gradle-plugin` (code first)
+* Upload an API definition in json format (resolved via `swagger-gradle-plugin`)  as a public API in SwaggerHub.
+
+```
+
+plugins {
+    ...
+    id 'java'
+    id "io.swagger.core.v3.swagger-gradle-plugin" version '2.0.5'
+    id "io.swagger.swaggerhub" version "1.0.1"
+}
+
+...
+
+resolve {
+    outputFileName = 'PetStoreAPI'
+    outputFormat = 'JSON'
+    prettyPrint = 'TRUE'
+    classpath = sourceSets.main.runtimeClasspath
+    resourcePackages = ['test.petstore']
+    outputPath = 'target'
+}
+
+swaggerhubUpload {
+    dependsOn resolve
     api 'PetStoreAPI'
     owner 'jsfrench'
     version '1.0.1-SNAPSHOT'
