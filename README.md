@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/swagger-api/swaggerhub-gradle-plugin.svg)](https://travis-ci.org/swagger-api/swaggerhub-gradle-plugin)
-# swaggerhub-gradle-plugin
+[![Build Status](https://img.shields.io/jenkins/s/https/jenkins.swagger.io/view/OSS%20-%20Java/job/oss-swaggerhub-gradle-plugin.svg)](https://jenkins.swagger.io/view/OSS%20-%20Java/job/oss-swaggerhub-gradle-plugin)
+# swaggerhub-gradle-plugin <img src="https://raw.githubusercontent.com/swagger-api/swagger.io/wordpress/images/assets/SW-logo-clr.png" height="50" align="right">
 A simple gradle plugin to integrate [SwaggerHub](https:\\swaggerhub.com) hosting of [OpenAPI/Swagger](https://swagger.io/specification/) definitions with a gradle build process, using the [SwaggerHub API](https://app.swaggerhub.com/apis/swagger-hub/registry-api).
 
 ## Features
@@ -99,7 +99,7 @@ swaggerhubUpload {
 plugins {
     ...
     id 'java'
-    id "io.swagger.core.v3.swagger-gradle-plugin" version '2.0.5'
+    id "io.swagger.core.v3.swagger-gradle-plugin" version '2.0.6'
     id "io.swagger.swaggerhub" version "1.0.1"
 }
 
