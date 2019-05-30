@@ -18,6 +18,7 @@ public class SwaggerHubClient {
     private final String token;
     private final String protocol;
     private static final String APIS = "apis";
+    private static final String DOMAINS = "domains";
 
 
     public SwaggerHubClient(String host, int port, String protocol, String token) {
@@ -89,25 +90,34 @@ public class SwaggerHubClient {
     }
 
     private HttpUrl getDownloadUrl(SwaggerHubRequest swaggerHubRequest) {
-        return getBaseUrl(swaggerHubRequest.getOwner(), swaggerHubRequest.getApi())
+        return getBaseUrl(swaggerHubRequest.getOwner(), swaggerHubRequest.getApi(), getSegment(swaggerHubRequest))
                 .addEncodedPathSegment(swaggerHubRequest.getVersion())
                 .build();
     }
 
     private HttpUrl getUploadUrl(SwaggerHubRequest swaggerHubRequest) {
-        return getBaseUrl(swaggerHubRequest.getOwner(), swaggerHubRequest.getApi())
+        return getBaseUrl(swaggerHubRequest.getOwner(), swaggerHubRequest.getApi(), getSegment(swaggerHubRequest))
                 .addEncodedQueryParameter("version", swaggerHubRequest.getVersion())
                 .addEncodedQueryParameter("isPrivate", Boolean.toString(swaggerHubRequest.isPrivate()))
                 .build();
     }
 
-    private HttpUrl.Builder getBaseUrl(String owner, String api) {
+    private HttpUrl.Builder getBaseUrl(String owner, String api, String segment) {
         return new HttpUrl.Builder()
                 .scheme(protocol)
                 .host(host)
                 .port(port)
-                .addPathSegment(APIS)
+                .addPathSegment(segment)
                 .addEncodedPathSegment(owner)
                 .addEncodedPathSegment(api);
+    }
+
+    private String getSegment(SwaggerHubRequest swaggerHubRequest) {
+
+        if (swaggerHubRequest.isDomain()) {
+            return DOMAINS;
+        } else {
+            return APIS;
+        }
     }
 }

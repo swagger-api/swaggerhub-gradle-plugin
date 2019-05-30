@@ -8,6 +8,7 @@ public class SwaggerHubRequest {
     private final String format;
     private final String swagger;
     private final boolean isPrivate;
+    private final boolean isDomain;
 
     public String getApi() {
         return api;
@@ -33,6 +34,10 @@ public class SwaggerHubRequest {
         return isPrivate;
     }
 
+    public boolean isDomain() {
+        return isDomain;
+    }
+
     private SwaggerHubRequest(Builder builder) {
         this.api = builder.api;
         this.owner = builder.owner;
@@ -40,6 +45,7 @@ public class SwaggerHubRequest {
         this.format = builder.format;
         this.swagger = builder.swagger;
         this.isPrivate = builder.isPrivate;
+        this.isDomain = builder.isDomain;
     }
 
     public static class Builder {
@@ -49,6 +55,7 @@ public class SwaggerHubRequest {
         private String format;
         private String swagger;
         private boolean isPrivate;
+        private  boolean isDomain;
 
         public Builder(String api, String owner, String version) {
             this.api = api;
@@ -68,6 +75,11 @@ public class SwaggerHubRequest {
 
         public Builder isPrivate(boolean isPrivate) {
             this.isPrivate = isPrivate;
+            return this;
+        }
+
+        public Builder isDomain(boolean isDomain) {
+            this.isDomain = isDomain;
             return this;
         }
 

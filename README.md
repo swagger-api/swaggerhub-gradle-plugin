@@ -51,8 +51,9 @@ apply plugin: "io.swagger.swaggerhub"
 ```
 
 ## Tasks
-### swaggerhubDownload
-#### Example Usage
+### SwaggerHub API Tasks
+#### swaggerhubDownload
+##### Example Usage
 * Download a public API definition in json format from SwaggerHub and save to a local file.
 ```
 swaggerhubDownload {
@@ -63,7 +64,7 @@ swaggerhubDownload {
 }
 ```
 
-#### Parameters
+##### Parameters
 Parameter | Description | Required | Default
 --------- | ----------- | --------- | -------
 **`api`** | API name | true  | -
@@ -78,8 +79,8 @@ Parameter | Description | Required | Default
 
 ***
 
-### swaggerhubUpload
-#### Example Usage
+#### swaggerhubUpload
+##### Example Usage
 * Upload an API definition in json format as a public API in SwaggerHub.
 
 ```
@@ -92,7 +93,7 @@ swaggerhubUpload {
 }
 ```
 
-#### Example Usage together with `swagger-gradle-plugin` (code first)
+##### Example Usage together with `swagger-gradle-plugin` (code first)
 * Upload an API definition in json format (resolved via `swagger-gradle-plugin`)  as a public API in SwaggerHub.
 
 ```
@@ -125,10 +126,66 @@ swaggerhubUpload {
 }
 ```
 
-#### Parameters
+##### Parameters
 Parameter | Description | Required | Default
 --------- | ----------- | --------- | -------
 **`api`** | API name | true  | -
+**`owner`** | API owner | true | -
+**`version`** | API version | true | -  
+**`inputFile`** | Local file containing the API definition in json or yaml format  | true | -
+**`token`** | SwaggerHub API key | true | -
+**`format`** | API definition format, `json` or `yaml` | false | `json`
+**`isPrivate`** | Defines whether the API should be private on SwaggerHub (using `true` requires a paid plan) | false | `false`
+**`host`** | URL of SwaggerHub API | false | `api.swaggerhub.com`
+**`protocol`** | Protocol for SwaggerHub API,`http` or `https` | false | `https`
+**`port`** | Port to access SwaggerHub API| false | `443`
+
+### SwaggerHub Domain Tasks
+#### swaggerhubDomainDownload
+##### Example Usage
+* Download a public Domain definition in json format from SwaggerHub and save to a local file.
+```
+swaggerhubDomainDownload {
+    domain 'testDomain'
+    owner 'jsfrench'
+    version '1.0.0'
+    outputFile 'target/test/petStoreAPI.json'
+}
+```
+
+##### Parameters
+Parameter | Description | Required | Default
+--------- | ----------- | --------- | -------
+**`domain`** | API name | true  | -
+**`owner`** | API owner | true | -
+**`version`** | API version | true | -  
+**`outputFile`** | API definition is written to this file | true | -
+**`token`** | SwaggerHub API key, required to access private definitions | false | -
+**`format`** | API definition format, `json` or `yaml` | false | `json`
+**`host`** | URL of SwaggerHub API | false | `api.swaggerhub.com`
+**`protocol`** | Protocol for SwaggerHub API,`http` or `https` | false | `https`
+**`port`** | Port to access SwaggerHub API| false | `443`
+
+***
+
+#### swaggerhubDomainUpload
+##### Example Usage
+* Upload an API definition in json format as a public API in SwaggerHub.
+
+```
+swaggerhubDomainUpload {
+    domain 'testDomain'
+    owner 'jsfrench'
+    version '1.0.2-SNAPSHOT'
+    inputFile 'target/petStoreAPI.json'
+    token  'duMmyAPiKEy'
+}
+```
+
+##### Parameters
+Parameter | Description | Required | Default
+--------- | ----------- | --------- | -------
+**`domain`** | API name | true  | -
 **`owner`** | API owner | true | -
 **`version`** | API version | true | -  
 **`inputFile`** | Local file containing the API definition in json or yaml format  | true | -
