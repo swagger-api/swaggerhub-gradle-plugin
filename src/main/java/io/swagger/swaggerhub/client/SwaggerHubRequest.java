@@ -7,6 +7,7 @@ public class SwaggerHubRequest {
     private final String version;
     private final String format;
     private final String swagger;
+    private final String oas;
     private final boolean isPrivate;
 
     public String getApi() {
@@ -29,6 +30,8 @@ public class SwaggerHubRequest {
         return swagger;
     }
 
+    public String getOas() { return oas; }
+
     public boolean isPrivate() {
         return isPrivate;
     }
@@ -40,6 +43,7 @@ public class SwaggerHubRequest {
         this.format = builder.format;
         this.swagger = builder.swagger;
         this.isPrivate = builder.isPrivate;
+        this.oas = builder.oas;
     }
 
     public static class Builder {
@@ -48,6 +52,7 @@ public class SwaggerHubRequest {
         private final String version;
         private String format;
         private String swagger;
+        private String oas;
         private boolean isPrivate;
 
         public Builder(String api, String owner, String version) {
@@ -68,6 +73,11 @@ public class SwaggerHubRequest {
 
         public Builder isPrivate(boolean isPrivate) {
             this.isPrivate = isPrivate;
+            return this;
+        }
+
+        public Builder oas(String oas) {
+            this.oas = oas;
             return this;
         }
 

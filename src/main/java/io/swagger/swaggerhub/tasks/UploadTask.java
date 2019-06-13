@@ -31,6 +31,7 @@ public class UploadTask extends DefaultTask {
     private int port = 443;
     private String protocol = "https";
     private String format = "json";
+    private String oas = "2.0";
     private static Logger LOGGER = Logging.getLogger(DownloadTask.class);
 
     private SwaggerHubClient swaggerHubClient;
@@ -130,6 +131,12 @@ public class UploadTask extends DefaultTask {
         this.format = format;
     }
 
+    @Input
+    @Optional
+    public String getOas() { return oas; }
+
+    public void setOas(String oas) { this.oas = oas; }
+
     @TaskAction
     public void uploadDefinition() throws GradleException {
 
@@ -141,7 +148,8 @@ public class UploadTask extends DefaultTask {
                 + ", version: " + version
                 + ", inputFile: " + inputFile
                 + ", format: " + format
-                + ", isPrivate: " + isPrivate);
+                + ", isPrivate: " + isPrivate
+                + ", oas: " + oas);
 
         try {
             String content = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
@@ -150,6 +158,7 @@ public class UploadTask extends DefaultTask {
                     .swagger(content)
                     .format(format)
                     .isPrivate(isPrivate)
+                    .oas(oas)
                     .build();
 
             swaggerHubClient.saveDefinition(swaggerHubRequest);

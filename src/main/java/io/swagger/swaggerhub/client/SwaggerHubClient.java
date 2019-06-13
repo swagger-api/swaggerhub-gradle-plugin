@@ -98,6 +98,7 @@ public class SwaggerHubClient {
         return getBaseUrl(swaggerHubRequest.getOwner(), swaggerHubRequest.getApi())
                 .addEncodedQueryParameter("version", swaggerHubRequest.getVersion())
                 .addEncodedQueryParameter("isPrivate", Boolean.toString(swaggerHubRequest.isPrivate()))
+                .addEncodedQueryParameter("oas", swaggerHubRequest.getOas())
                 .build();
     }
 
