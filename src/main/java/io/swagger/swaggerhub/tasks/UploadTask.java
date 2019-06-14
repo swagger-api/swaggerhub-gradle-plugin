@@ -1,5 +1,8 @@
 package io.swagger.swaggerhub.tasks;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.swagger.swaggerhub.client.SwaggerHubClient;
 import io.swagger.swaggerhub.client.SwaggerHubRequest;
 import org.gradle.api.DefaultTask;
@@ -9,8 +12,6 @@ import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.internal.impldep.com.fasterxml.jackson.databind.JsonNode;
-import org.gradle.internal.impldep.com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -152,7 +153,7 @@ public class UploadTask extends DefaultTask {
                     .swagger(content)
                     .format(format)
                     .isPrivate(isPrivate)
-                    .oas(getOasVersion(content))
+                    .oas(getOasVersion(content,format))
                     .build();
 
             swaggerHubClient.saveDefinition(swaggerHubRequest);
@@ -161,8 +162,16 @@ public class UploadTask extends DefaultTask {
         }
     }
 
-    private String getOasVersion(String content) throws IOException {
-        JsonNode definition = new ObjectMapper().readTree(content);
+    private String getOasVersion(String content, String format) throws IOException {
+        JsonNode definition;
+        if(format.equals("json")){
+            definition = new ObjectMapper().readTree(content);
+        }else if(format.equals("yaml")){
+            definition = new ObjectMapper(new YAMLFactory()).readTree(content);
+        }else{
+            throw new GradleException("Unknown definition format. Unable to ascertain OAS version.");
+        }
+
         if (definition.has("swagger")) {
             return definition.get("swagger").textValue();
         }else if (definition.has("openapi")){

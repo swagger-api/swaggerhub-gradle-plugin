@@ -24,6 +24,8 @@ dependencies {
     compile     gradleApi()
     compile group: 'com.squareup.okhttp', name: 'okhttp', version:'2.7.5'
     compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.7'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.9'
     testCompile group: 'com.github.tomakehurst', name: 'wiremock', version:'2.14.0'
     testCompile gradleTestKit()
     testCompile 'junit:junit:4+'
