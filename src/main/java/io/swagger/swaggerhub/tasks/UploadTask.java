@@ -9,6 +9,8 @@ import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.internal.impldep.com.fasterxml.jackson.databind.JsonNode;
+import org.gradle.internal.impldep.com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -31,7 +33,6 @@ public class UploadTask extends DefaultTask {
     private int port = 443;
     private String protocol = "https";
     private String format = "json";
-    private String oas = "2.0";
     private static Logger LOGGER = Logging.getLogger(DownloadTask.class);
 
     private SwaggerHubClient swaggerHubClient;
@@ -131,12 +132,6 @@ public class UploadTask extends DefaultTask {
         this.format = format;
     }
 
-    @Input
-    @Optional
-    public String getOas() { return oas; }
-
-    public void setOas(String oas) { this.oas = oas; }
-
     @TaskAction
     public void uploadDefinition() throws GradleException {
 
@@ -148,8 +143,7 @@ public class UploadTask extends DefaultTask {
                 + ", version: " + version
                 + ", inputFile: " + inputFile
                 + ", format: " + format
-                + ", isPrivate: " + isPrivate
-                + ", oas: " + oas);
+                + ", isPrivate: " + isPrivate);
 
         try {
             String content = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
@@ -158,12 +152,23 @@ public class UploadTask extends DefaultTask {
                     .swagger(content)
                     .format(format)
                     .isPrivate(isPrivate)
-                    .oas(oas)
+                    .oas(getOasVersion(content))
                     .build();
 
             swaggerHubClient.saveDefinition(swaggerHubRequest);
         } catch (IOException | GradleException e) {
             throw new GradleException(e.getMessage(), e);
+        }
+    }
+
+    private String getOasVersion(String content) throws IOException {
+        JsonNode definition = new ObjectMapper().readTree(content);
+        if (definition.has("swagger")) {
+            return definition.get("swagger").textValue();
+        }else if (definition.has("openapi")){
+            return definition.get("openapi").textValue();
+        }else{
+            throw new GradleException("Unable to validate the OAS version of the definition.");
         }
     }
 }
