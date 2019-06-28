@@ -76,6 +76,7 @@ Parameter | Description | Required | Default
 **`host`** | URL of SwaggerHub API | false | `api.swaggerhub.com`
 **`protocol`** | Protocol for SwaggerHub API,`http` or `https` | false | `https`
 **`port`** | Port to access SwaggerHub API| false | `443`
+**`oas`** | Version of the OpenApi Specification the definition adheres to | false | `2.0`
 
 ***
 
