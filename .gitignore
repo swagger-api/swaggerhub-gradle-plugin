@@ -1,5 +1,5 @@
 
-# Created by https://www.gitignore.io/api/java,gradle,intellij
+# Created by https://www.gitignore.io/specName/java,gradle,intellij
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
@@ -107,7 +107,7 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 
-# End of https://www.gitignore.io/api/java,gradle,intellij
+# End of https://www.gitignore.io/specName/java,gradle,intellij
 
 .idea/modules
 # IntelliJ IDEA

@@ -22,7 +22,8 @@ import java.nio.file.Paths;
  */
 public class UploadTask extends DefaultTask {
     private String owner;
-    private String api;
+    private String specName;
+    private String domain;
     private String version;
     private String token;
     private String inputFile;
@@ -32,6 +33,7 @@ public class UploadTask extends DefaultTask {
     private String protocol = "https";
     private String format = "json";
     private String oas = "2.0";
+    private String specType = "api";
     private static Logger LOGGER = Logging.getLogger(DownloadTask.class);
 
     private SwaggerHubClient swaggerHubClient;
@@ -46,13 +48,19 @@ public class UploadTask extends DefaultTask {
     }
 
     @Input
-    public String getApi() {
-        return api;
+    public String getSpecName() {
+        return specName;
     }
 
-    public void setApi(String api) {
-        this.api = api;
+    public void setSpecName(String api) {
+        this.specName = api;
     }
+
+    @Input
+    @Optional
+    public String getDomain() { return domain; }
+
+    public void setDomain(String domain) { this.domain = domain; }
 
     @Input
     public String getVersion() {
@@ -137,28 +145,36 @@ public class UploadTask extends DefaultTask {
 
     public void setOas(String oas) { this.oas = oas; }
 
+    @Input
+    @Optional
+    public String getSpecType() { return specType; }
+
+    public void setSpecType(String specType) { this.specType = specType; }
+
     @TaskAction
     public void uploadDefinition() throws GradleException {
 
         swaggerHubClient = new SwaggerHubClient(host, port, protocol, token);
 
         LOGGER.info("Uploading to " + host
-                + ": api: " + api
+                + ": specName: " + specName
                 + ", owner: " + owner
                 + ", version: " + version
                 + ", inputFile: " + inputFile
                 + ", format: " + format
                 + ", isPrivate: " + isPrivate
-                + ", oas: " + oas);
+                + ", oas: " + oas
+                + ", specType: " + specType);
 
         try {
             String content = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
 
-            SwaggerHubRequest swaggerHubRequest = new SwaggerHubRequest.Builder(api, owner, version)
+            SwaggerHubRequest swaggerHubRequest = new SwaggerHubRequest.Builder(specName, owner, version)
                     .swagger(content)
                     .format(format)
                     .isPrivate(isPrivate)
                     .oas(oas)
+                    .specType(specType)
                     .build();
 
             swaggerHubClient.saveDefinition(swaggerHubRequest);
@@ -166,4 +182,5 @@ public class UploadTask extends DefaultTask {
             throw new GradleException(e.getMessage(), e);
         }
     }
+    
 }

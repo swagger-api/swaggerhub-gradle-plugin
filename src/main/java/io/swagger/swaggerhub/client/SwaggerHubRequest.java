@@ -2,17 +2,18 @@ package io.swagger.swaggerhub.client;
 
 
 public class SwaggerHubRequest {
-    private final String api;
+    private final String specification;
     private final String owner;
     private final String version;
     private final String format;
     private final String swagger;
     private final String oas;
+    private final String specType;
     private final boolean isPrivate;
 
 
-    public String getApi() {
-        return api;
+    public String getSpecification() {
+        return specification;
     }
 
     public String getOwner() {
@@ -37,29 +38,33 @@ public class SwaggerHubRequest {
         return isPrivate;
     }
 
+    public String getSpecType() {return specType;}
+
 
     private SwaggerHubRequest(Builder builder) {
-        this.api = builder.api;
+        this.specification = builder.specification;
         this.owner = builder.owner;
         this.version = builder.version;
         this.format = builder.format;
         this.swagger = builder.swagger;
         this.isPrivate = builder.isPrivate;
         this.oas = builder.oas;
+        this.specType = builder.specType;
 
     }
 
     public static class Builder {
-        private final String api;
+        private final String specification;
         private final String owner;
         private final String version;
         private String format;
         private String swagger;
         private String oas;
+        private String specType;
         private boolean isPrivate;
 
-        public Builder(String api, String owner, String version) {
-            this.api = api;
+        public Builder(String specification, String owner, String version) {
+            this.specification = specification;
             this.owner = owner;
             this.version = version;
         }
@@ -83,6 +88,11 @@ public class SwaggerHubRequest {
         public Builder oas(String oas) {
             this.oas = oas;
 
+            return this;
+        }
+
+        public Builder specType(String specType) {
+            this.specType = specType;
             return this;
         }
 

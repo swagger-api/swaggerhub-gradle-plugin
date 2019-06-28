@@ -1,7 +1,7 @@
 [![Build Status](https://img.shields.io/jenkins/s/https/jenkins.swagger.io/view/OSS%20-%20Java/job/oss-swaggerhub-gradle-plugin.svg)](https://jenkins.swagger.io/view/OSS%20-%20Java/job/oss-swaggerhub-gradle-plugin)
 
-# swaggerhub-gradle-plugin <img src="https://raw.githubusercontent.com/swagger-api/swagger.io/wordpress/images/assets/SW-logo-clr.png" height="50" align="right">
-A simple gradle plugin to integrate [SwaggerHub](https:\\swaggerhub.com) hosting of [OpenAPI/Swagger](https://swagger.io/specification/) definitions with a gradle build process, using the [SwaggerHub API](https://app.swaggerhub.com/apis/swagger-hub/registry-api).
+# swaggerhub-gradle-plugin <img src="https://raw.githubusercontent.com/swagger-specName/swagger.io/wordpress/images/assets/SW-logo-clr.png" height="50" align="right">
+A simple gradle plugin to integrate [SwaggerHub](https:\\swaggerhub.com) hosting of [OpenAPI/Swagger](https://swagger.io/specification/) definitions with a gradle build process, using the [SwaggerHub API](https://app.swaggerhub.com/apis/swagger-hub/registry-specName).
 
 ## Features
 * Download/upload API definitions from/to SwaggerHub.
@@ -9,21 +9,21 @@ A simple gradle plugin to integrate [SwaggerHub](https:\\swaggerhub.com) hosting
 * Authenticate with API key for restricted operations (e.g downloading a private API definition).
 * Connects to SwaggerHub cloud by default or local SwaggerHub instance through optional configuration.
 
-The pattern of usage is likely to depend on whether a [code first or design first](https://swaggerhub.com/blog/api-design/design-first-or-code-first-api-development/) approach is followed.
+The pattern of usage is likely to depend on whether a [code first or design first](https://swaggerhub.com/blog/specName-design/design-first-or-code-first-specName-development/) approach is followed.
 
 ## Example use cases
 
 ### Code First
 1. Code API implementation.
-2. Automatically generate API definition from implementation, e.g. via [swagger-core](https://github.com/swagger-api/swagger-core) [annotations](https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Annotations) and [swagger gradle plugin](https://github.com/swagger-api/swagger-core/tree/master/modules/swagger-gradle-plugin). See also [swagger-core wiki](https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Getting-started)
+2. Automatically generate API definition from implementation, e.g. via [swagger-core](https://github.com/swagger-specName/swagger-core) [annotations](https://github.com/swagger-specName/swagger-core/wiki/Swagger-2.X---Annotations) and [swagger gradle plugin](https://github.com/swagger-specName/swagger-core/tree/master/modules/swagger-gradle-plugin). See also [swagger-core wiki](https://github.com/swagger-specName/swagger-core/wiki/Swagger-2.X---Getting-started)
 3. Upload generated API definition to SwaggerHub with swaggerhub-gradle-plugin.
 
 ### Design First
 1. Write API definition (e.g. in Swagger Editor or SwaggerHub).
 2. Download API definition with swaggerhub-gradle-plugin.
 3. Pass API definition to another Swagger tool e.g.
-    - [swagger-codegen](https://github.com/swagger-api/swagger-codegen) to generate API client and resource classes.
-    - [swagger-inflector](https://github.com/swagger-api/swagger-inflector) to automatically wire up the API definition to the implementation and provide out-of-the-box mocking.
+    - [swagger-codegen](https://github.com/swagger-specName/swagger-codegen) to generate API client and resource classes.
+    - [swagger-inflector](https://github.com/swagger-specName/swagger-inflector) to automatically wire up the API definition to the implementation and provide out-of-the-box mocking.
 
 ## Installation
 ### Gradle 2.1 and higher
@@ -57,7 +57,7 @@ apply plugin: "io.swagger.swaggerhub"
 * Download a public API definition in json format from SwaggerHub and save to a local file.
 ```
 swaggerhubDownload {
-    api 'PetStoreAPI'
+    specName 'PetStoreAPI'
     owner 'jsfrench'
     version '1.0.0'
     outputFile 'target/test/petStoreAPI.json'
@@ -67,16 +67,17 @@ swaggerhubDownload {
 ##### Parameters
 Parameter | Description | Required | Default
 --------- | ----------- | --------- | -------
-**`api`** | API name | true  | -
+**`specName`** | API name | true  | -
 **`owner`** | API owner | true | -
 **`version`** | API version | true | -  
 **`outputFile`** | API definition is written to this file | true | -
 **`token`** | SwaggerHub API key, required to access private definitions | false | -
 **`format`** | API definition format, `json` or `yaml` | false | `json`
-**`host`** | URL of SwaggerHub API | false | `api.swaggerhub.com`
+**`host`** | URL of SwaggerHub API | false | `specName.swaggerhub.com`
 **`protocol`** | Protocol for SwaggerHub API,`http` or `https` | false | `https`
 **`port`** | Port to access SwaggerHub API| false | `443`
 **`oas`** | Version of the OpenApi Specification the definition adheres to | false | `2.0`
+**`specType`**|Whether it is a domain or an specName| false | `specName`
 
 ***
 
@@ -86,7 +87,7 @@ Parameter | Description | Required | Default
 
 ```
 swaggerhubUpload {
-    api 'PetStoreAPI'
+    specName 'PetStoreAPI'
     owner 'jsfrench'
     version '1.0.1-SNAPSHOT'
     inputFile 'target/petStoreAPI.json'
@@ -119,7 +120,7 @@ resolve {
 
 swaggerhubUpload {
     dependsOn resolve
-    api 'PetStoreAPI'
+    specName 'PetStoreAPI'
     owner 'jsfrench'
     version '1.0.1-SNAPSHOT'
     inputFile 'target/petStoreAPI.json'
@@ -130,69 +131,14 @@ swaggerhubUpload {
 ##### Parameters
 Parameter | Description | Required | Default
 --------- | ----------- | --------- | -------
-**`api`** | API name | true  | -
+**`specName`** | API name | true  | -
 **`owner`** | API owner | true | -
 **`version`** | API version | true | -  
 **`inputFile`** | Local file containing the API definition in json or yaml format  | true | -
 **`token`** | SwaggerHub API key | true | -
 **`format`** | API definition format, `json` or `yaml` | false | `json`
 **`isPrivate`** | Defines whether the API should be private on SwaggerHub (using `true` requires a paid plan) | false | `false`
-**`host`** | URL of SwaggerHub API | false | `api.swaggerhub.com`
+**`host`** | URL of SwaggerHub API | false | `specName.swaggerhub.com`
 **`protocol`** | Protocol for SwaggerHub API,`http` or `https` | false | `https`
 **`port`** | Port to access SwaggerHub API| false | `443`
-
-### SwaggerHub Domain Tasks
-#### swaggerhubDomainDownload
-##### Example Usage
-* Download a public Domain definition in json format from SwaggerHub and save to a local file.
-```
-swaggerhubDomainDownload {
-    domain 'testDomain'
-    owner 'jsfrench'
-    version '1.0.0'
-    outputFile 'target/test/petStoreAPI.json'
-}
-```
-
-##### Parameters
-Parameter | Description | Required | Default
---------- | ----------- | --------- | -------
-**`domain`** | API name | true  | -
-**`owner`** | API owner | true | -
-**`version`** | API version | true | -  
-**`outputFile`** | API definition is written to this file | true | -
-**`token`** | SwaggerHub API key, required to access private definitions | false | -
-**`format`** | API definition format, `json` or `yaml` | false | `json`
-**`host`** | URL of SwaggerHub API | false | `api.swaggerhub.com`
-**`protocol`** | Protocol for SwaggerHub API,`http` or `https` | false | `https`
-**`port`** | Port to access SwaggerHub API| false | `443`
-
-***
-
-#### swaggerhubDomainUpload
-##### Example Usage
-* Upload an API definition in json format as a public API in SwaggerHub.
-
-```
-swaggerhubDomainUpload {
-    domain 'testDomain'
-    owner 'jsfrench'
-    version '1.0.2-SNAPSHOT'
-    inputFile 'target/petStoreAPI.json'
-    token  'duMmyAPiKEy'
-}
-```
-
-##### Parameters
-Parameter | Description | Required | Default
---------- | ----------- | --------- | -------
-**`domain`** | API name | true  | -
-**`owner`** | API owner | true | -
-**`version`** | API version | true | -  
-**`inputFile`** | Local file containing the API definition in json or yaml format  | true | -
-**`token`** | SwaggerHub API key | true | -
-**`format`** | API definition format, `json` or `yaml` | false | `json`
-**`isPrivate`** | Defines whether the API should be private on SwaggerHub (using `true` requires a paid plan) | false | `false`
-**`host`** | URL of SwaggerHub API | false | `api.swaggerhub.com`
-**`protocol`** | Protocol for SwaggerHub API,`http` or `https` | false | `https`
-**`port`** | Port to access SwaggerHub API| false | `443`
+**`specType`**|Whether it is a `domain` or an `specName`| false | `specName`

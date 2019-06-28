@@ -35,9 +35,35 @@ public class SwaggerHubDownloadTest {
 
         String buildFileContent = "plugins { id 'io.swagger.swaggerhub' }\n" +
                 downloadTask + " {\n" +
-                "    api \'PetStoreAPI\'\n" +
+                "    specName \'PetStoreAPI\'\n" +
                 "    owner \'jsfrench\'\n" +
                 "    version \'1.0.0\'\n" +
+                "    outputFile \'" + outputFile + "\'\n" +
+                "}";
+
+        writeFile(buildFile, buildFileContent);
+
+        BuildResult result = GradleRunner.create()
+                .withPluginClasspath()
+                .withProjectDir(testProjectDir.getRoot())
+                .withArguments(downloadTask, "--stacktrace")
+                .build();
+
+        assertEquals(SUCCESS, result.task(":" + downloadTask).getOutcome());
+        assertTrue(new File(outputFile).exists());
+    }
+
+    @Test
+    public void testSwaggerHubDomainDownloadTask() throws IOException {
+        outputFile = testProjectDir.getRoot().toString() + "/testDomain.json";
+        String downloadTask = "swaggerhubDownload";
+
+        String buildFileContent = "plugins { id 'io.swagger.swaggerhub' }\n" +
+                downloadTask + " {\n" +
+                "    specName \'testDomain\'\n" +
+                "    owner \'jsfrench\'\n" +
+                "    version \'1.0.0\'\n" +
+                "    specType \'domain\'\n" +
                 "    outputFile \'" + outputFile + "\'\n" +
                 "}";
 

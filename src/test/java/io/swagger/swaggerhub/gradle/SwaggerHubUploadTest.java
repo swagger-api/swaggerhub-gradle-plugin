@@ -43,6 +43,7 @@ public class SwaggerHubUploadTest {
     public final TemporaryFolder testProjectDir = new TemporaryFolder();
     private File buildFile;
     private String testInputAPI = "TestAPI.json";
+    private String testInputDomain = "TestDomain.json";
     private static String UPLOAD_TASK = "swaggerhubUpload";
     private String api = "TestAPI";
     private String owner = "testUser";
@@ -72,6 +73,22 @@ public class SwaggerHubUploadTest {
 
         SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
                 .swagger(swagger)
+                .specType("api")
+                .build();
+
+        setupServerMocking(request, host, port, protocol, token);
+        assertEquals(SUCCESS, runBuild(request));
+    }
+
+    @Test
+    public void testUploadDomain() throws IOException, URISyntaxException {
+        copyInputFile(testInputDomain, testProjectDir.getRoot());
+        inputFile = String.format("%s/%s", testProjectDir.getRoot().toString(), testInputDomain);
+        swagger = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
+
+        SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
+                .swagger(swagger)
+                .specType("domain")
                 .build();
 
         setupServerMocking(request, host, port, protocol, token);
@@ -87,6 +104,7 @@ public class SwaggerHubUploadTest {
         SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
                 .isPrivate(true)
                 .swagger(swagger)
+                .specType("api")
                 .build();
 
         setupServerMocking(request, host, port, protocol, token);
@@ -103,6 +121,24 @@ public class SwaggerHubUploadTest {
         SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
                 .format("yaml")
                 .swagger(swagger)
+                .specType("api")
+                .build();
+
+        setupServerMocking(request, host, port, protocol, token);
+        assertEquals(SUCCESS, runBuild(request));
+    }
+
+    @Test
+    public void testUploadYamlDomain() throws Exception {
+        testInputDomain = "TestDomain.yaml";
+        copyInputFile(testInputDomain, testProjectDir.getRoot());
+        inputFile = String.format("%s/%s", testProjectDir.getRoot().toString(), testInputDomain);
+        swagger = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
+
+        SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
+                .format("yaml")
+                .swagger(swagger)
+                .specType("domain")
                 .build();
 
         setupServerMocking(request, host, port, protocol, token);
@@ -127,9 +163,10 @@ public class SwaggerHubUploadTest {
                 "    host \'" + host + "\'\n" +
                 "    port " + port + "\n" +
                 "    protocol \'" + protocol + "\'\n" +
-                "    api \'" + request.getApi() + "\'\n" +
+                "    specName \'" + request.getSpecification() + "\'\n" +
                 "    owner \'" + request.getOwner() + "\'\n" +
                 "    version \'" + request.getVersion() + "\'\n" +
+                "    specType \'" + request.getSpecType() + "\'\n" +
                 getFormatSetting(request.getFormat()) +
                 getIsPrivateSetting(request.isPrivate()) +
                 "    inputFile \'" + inputFile + "\'\n" +
@@ -171,20 +208,22 @@ public class SwaggerHubUploadTest {
     }
 
     private UrlPathPattern setupServerMocking(SwaggerHubRequest request, String host, String port, String protocol, String token) {
-        String api = request.getApi();
+        String api = request.getSpecification();
         String owner = request.getOwner();
         String version = request.getVersion();
         String format = request.getFormat();
         String isPrivate = Boolean.toString(request.isPrivate());
+        String oasVersion = request.getOas();
 
 
         startMockServer(Integer.parseInt(port));
 
-        UrlPathPattern url = urlPathEqualTo("/apis/" + owner + "/" + api);
+        UrlPathPattern url = urlPathEqualTo("/"+ request.getSpecType() +"s/" + owner + "/" + api);
 
         stubFor(post(url)
                 .withQueryParam("version", equalTo(version))
                 .withQueryParam("isPrivate", equalTo(isPrivate != null ? isPrivate : "false"))
+                .withQueryParam("oas", equalTo(oasVersion != null ? oasVersion : "2.0"))
                 .withHeader("Content-Type", equalToIgnoreCase(
                         String.format("application/%s; charset=UTF-8", format != null ? format : "json")))
                 .withHeader("Authorization", equalTo(token))

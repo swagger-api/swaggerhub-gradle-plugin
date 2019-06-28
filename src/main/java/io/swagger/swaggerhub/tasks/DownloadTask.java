@@ -8,7 +8,6 @@ import org.gradle.api.GradleException;
 import org.gradle.api.logging.Logging;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Optional;
-import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
 import org.slf4j.Logger;
 
@@ -24,7 +23,7 @@ import java.nio.file.Paths;
  */
 public class DownloadTask extends DefaultTask {
     private String owner;
-    private String api;
+    private String specName;
     private String version;
     private String token;
     private String outputFile;
@@ -32,6 +31,7 @@ public class DownloadTask extends DefaultTask {
     private String host = "api.swaggerhub.com";
     private int port = 443;
     private String protocol = "https";
+    private String specType = "api";
     private static Logger LOGGER = Logging.getLogger(DownloadTask.class);
 
     @Input
@@ -44,12 +44,12 @@ public class DownloadTask extends DefaultTask {
     }
 
     @Input
-    public String getApi() {
-        return api;
+    public String getSpecName() {
+        return specName;
     }
 
-    public void setApi(String api) {
-        this.api = api;
+    public void setSpecName(String specName) {
+        this.specName = specName;
     }
 
     @Input
@@ -120,19 +120,26 @@ public class DownloadTask extends DefaultTask {
         this.format = format;
     }
 
+    @Input
+    @Optional
+    public String getSpecType() { return specType; }
+
+    public void setSpecType(String specType) { this.specType = specType; }
+
     @TaskAction
     public void downloadDefinition() throws GradleException {
         SwaggerHubClient swaggerHubClient = new SwaggerHubClient(host, port, protocol, token);
 
         LOGGER.info("Downloading from " + host
-                + ": api:" + api
+                + ": specName:" + specName
                 + ", owner:" + owner
                 + ", version:" + version
                 + ", format:" + format
                 + ", outputFile:" + outputFile);
 
-        SwaggerHubRequest swaggerHubRequest = new SwaggerHubRequest.Builder(api, owner, version)
+        SwaggerHubRequest swaggerHubRequest = new SwaggerHubRequest.Builder(specName, owner, version)
                 .format(format)
+                .specType(specType)
                 .build();
 
         try {
