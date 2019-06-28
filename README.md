@@ -67,17 +67,17 @@ swaggerhubDownload {
 ##### Parameters
 Parameter | Description | Required | Default
 --------- | ----------- | --------- | -------
-**`specName`** | API name | true  | -
-**`owner`** | API owner | true | -
-**`version`** | API version | true | -  
-**`outputFile`** | API definition is written to this file | true | -
+**`specName`** | Specification name | true  | -
+**`owner`** | Specification owner | true | -
+**`version`** | Specification version | true | -  
+**`outputFile`** | Specification definition is written to this file | true | -
 **`token`** | SwaggerHub API key, required to access private definitions | false | -
-**`format`** | API definition format, `json` or `yaml` | false | `json`
-**`host`** | URL of SwaggerHub API | false | `specName.swaggerhub.com`
+**`format`** | Specification definition format, `json` or `yaml` | false | `json`
+**`host`** | URL of SwaggerHub API | false | `api.swaggerhub.com`
 **`protocol`** | Protocol for SwaggerHub API,`http` or `https` | false | `https`
 **`port`** | Port to access SwaggerHub API| false | `443`
 **`oas`** | Version of the OpenApi Specification the definition adheres to | false | `2.0`
-**`specType`**|Whether it is a domain or an specName| false | `specName`
+**`specType`**|Whether it is a domain or an specName| false | `api`
 
 ***
 
@@ -131,14 +131,14 @@ swaggerhubUpload {
 ##### Parameters
 Parameter | Description | Required | Default
 --------- | ----------- | --------- | -------
-**`specName`** | API name | true  | -
-**`owner`** | API owner | true | -
-**`version`** | API version | true | -  
-**`inputFile`** | Local file containing the API definition in json or yaml format  | true | -
+**`specName`** | Specification name | true  | -
+**`owner`** | Specification owner | true | -
+**`version`** | Specification version | true | -  
+**`inputFile`** | Local file containing the Specification definition in json or yaml format  | true | -
 **`token`** | SwaggerHub API key | true | -
-**`format`** | API definition format, `json` or `yaml` | false | `json`
-**`isPrivate`** | Defines whether the API should be private on SwaggerHub (using `true` requires a paid plan) | false | `false`
-**`host`** | URL of SwaggerHub API | false | `specName.swaggerhub.com`
+**`format`** | Specification definition format, `json` or `yaml` | false | `json`
+**`isPrivate`** | Defines whether the specification should be private on SwaggerHub (using `true` requires a paid plan) | false | `false`
+**`host`** | URL of SwaggerHub API | false | `api.swaggerhub.com`
 **`protocol`** | Protocol for SwaggerHub API,`http` or `https` | false | `https`
 **`port`** | Port to access SwaggerHub API| false | `443`
-**`specType`**|Whether it is a `domain` or an `specName`| false | `specName`
+**`specType`**|Whether it is a `domain` or an `api`| false | `api`
