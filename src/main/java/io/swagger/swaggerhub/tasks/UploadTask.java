@@ -28,7 +28,7 @@ public class UploadTask extends DefaultTask {
     private String inputFile;
     private Boolean isPrivate = false;
     private String host = "api.swaggerhub.com";
-    private int port = 443;
+    private Integer port = 443;
     private String protocol = "https";
     private String format = "json";
     private String oas = "2.0";
@@ -103,11 +103,11 @@ public class UploadTask extends DefaultTask {
 
     @Input
     @Optional
-    public int getPort() {
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 

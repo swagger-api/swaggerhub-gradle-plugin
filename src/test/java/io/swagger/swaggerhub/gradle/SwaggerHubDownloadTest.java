@@ -30,7 +30,10 @@ public class SwaggerHubDownloadTest {
 
     @Test
     public void testSwaggerHubDownloadTask() throws IOException {
-        outputFile = testProjectDir.getRoot().toString() + "/testAPI.json";
+        File rootDir = testProjectDir.getRoot();
+        // Windows support
+        String properPath = rootDir.getPath().replace('\\', '/');
+        outputFile = properPath + "/testAPI.json";
         String downloadTask = "swaggerhubDownload";
 
         String buildFileContent = "plugins { id 'io.swagger.swaggerhub' }\n" +
@@ -45,7 +48,7 @@ public class SwaggerHubDownloadTest {
 
         BuildResult result = GradleRunner.create()
                 .withPluginClasspath()
-                .withProjectDir(testProjectDir.getRoot())
+                .withProjectDir(rootDir)
                 .withArguments(downloadTask, "--stacktrace")
                 .build();
 

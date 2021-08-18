@@ -122,6 +122,8 @@ public class SwaggerHubUploadTest {
     }
 
     private String createBuildFile(SwaggerHubRequest request) throws IOException {
+        // Windows support
+        inputFile = inputFile.replace('\\', '/');
         String buildFileContent =  "plugins { id 'io.swagger.swaggerhub' }\n" +
                 UPLOAD_TASK + " {\n" +
                 "    host \'" + host + "\'\n" +
