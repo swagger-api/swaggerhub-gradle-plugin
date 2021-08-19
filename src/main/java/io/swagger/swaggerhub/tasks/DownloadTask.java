@@ -8,7 +8,6 @@ import org.gradle.api.GradleException;
 import org.gradle.api.logging.Logging;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Optional;
-import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
 import org.slf4j.Logger;
 
@@ -32,6 +31,8 @@ public class DownloadTask extends DefaultTask {
     private String host = "api.swaggerhub.com";
     private Integer port = 443;
     private String protocol = "https";
+    private Boolean isResolved = false;
+    private Boolean isFlatten = false;
     private static Logger LOGGER = Logging.getLogger(DownloadTask.class);
 
     @Input
@@ -120,6 +121,26 @@ public class DownloadTask extends DefaultTask {
         this.format = format;
     }
 
+    @Input
+    @Optional
+    public Boolean getResolved() {
+        return isResolved;
+    }
+
+    public void setResolved(Boolean isResolved) {
+        this.isResolved = isResolved;
+    }
+
+    @Input
+    @Optional
+    public Boolean getFlatten() {
+        return isFlatten;
+    }
+
+    public void setFlatten(Boolean isFlatten) {
+        this.isFlatten = isFlatten;
+    }
+
     @TaskAction
     public void downloadDefinition() throws GradleException {
         SwaggerHubClient swaggerHubClient = new SwaggerHubClient(host, port, protocol, token);
@@ -129,10 +150,15 @@ public class DownloadTask extends DefaultTask {
                 + ", owner:" + owner
                 + ", version:" + version
                 + ", format:" + format
-                + ", outputFile:" + outputFile);
+                + ", outputFile:" + outputFile
+                + ", isResolved:" + isResolved
+                + ", isFlatten:" + isFlatten);
 
         SwaggerHubRequest swaggerHubRequest = new SwaggerHubRequest.Builder(api, owner, version)
                 .format(format)
+                .isResolved(isResolved)
+                .isFlatten(isFlatten)
+                .isResolved(isResolved)
                 .build();
 
         try {

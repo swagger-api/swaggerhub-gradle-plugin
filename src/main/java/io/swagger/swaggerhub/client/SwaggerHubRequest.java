@@ -9,6 +9,8 @@ public class SwaggerHubRequest {
     private final String swagger;
     private final String oas;
     private final boolean isPrivate;
+    private final boolean isResolved;
+    private final boolean isFlatten;
 
     public String getApi() {
         return api;
@@ -36,6 +38,14 @@ public class SwaggerHubRequest {
         return isPrivate;
     }
 
+    public boolean isResolved() {
+        return isResolved;
+    }
+
+    public boolean isFlatten() {
+        return isFlatten;
+    }
+
     private SwaggerHubRequest(Builder builder) {
         this.api = builder.api;
         this.owner = builder.owner;
@@ -44,6 +54,8 @@ public class SwaggerHubRequest {
         this.swagger = builder.swagger;
         this.isPrivate = builder.isPrivate;
         this.oas = builder.oas;
+        this.isResolved = builder.isResolved;
+        this.isFlatten = builder.isFlatten;
     }
 
     public static class Builder {
@@ -54,6 +66,8 @@ public class SwaggerHubRequest {
         private String swagger;
         private String oas;
         private boolean isPrivate;
+        private boolean isResolved;
+        private boolean isFlatten;
 
         public Builder(String api, String owner, String version) {
             this.api = api;
@@ -78,6 +92,16 @@ public class SwaggerHubRequest {
 
         public Builder oas(String oas) {
             this.oas = oas;
+            return this;
+        }
+
+        public Builder isResolved(boolean isResolved) {
+            this.isResolved = isResolved;
+            return this;
+        }
+
+        public Builder isFlatten(boolean isFlatten) {
+            this.isFlatten = isFlatten;
             return this;
         }
 

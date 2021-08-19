@@ -91,6 +91,8 @@ public class SwaggerHubClient {
     private HttpUrl getDownloadUrl(SwaggerHubRequest swaggerHubRequest) {
         return getBaseUrl(swaggerHubRequest.getOwner(), swaggerHubRequest.getApi())
                 .addEncodedPathSegment(swaggerHubRequest.getVersion())
+                .addEncodedQueryParameter("resolved", Boolean.toString(swaggerHubRequest.isResolved()))
+                .addEncodedQueryParameter("flatten", Boolean.toString(swaggerHubRequest.isFlatten()))
                 .build();
     }
 
