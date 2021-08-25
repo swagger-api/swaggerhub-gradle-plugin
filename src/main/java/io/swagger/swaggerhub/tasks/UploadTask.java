@@ -21,6 +21,7 @@ import java.nio.file.Paths;
  * Uploads API definition to SwaggerHub
  */
 public class UploadTask extends DefaultTask {
+    private static final Logger LOGGER = Logging.getLogger(UploadTask.class);
     private String owner;
     private String api;
     private String version;
@@ -32,7 +33,6 @@ public class UploadTask extends DefaultTask {
     private String protocol = "https";
     private String format = "json";
     private String oas = "2.0";
-    private static Logger LOGGER = Logging.getLogger(DownloadTask.class);
 
     private SwaggerHubClient swaggerHubClient;
 
@@ -102,7 +102,6 @@ public class UploadTask extends DefaultTask {
     }
 
     @Input
-    @Optional
     public int getPort() {
         return port;
     }
