@@ -31,7 +31,7 @@ public class DownloadTask extends DefaultTask {
     private String outputFile;
     private String format = "json";
     private String host = "api.swaggerhub.com";
-    private int port = 443;
+    private Integer port = 443;
     private String protocol = "https";
 
     @Input
@@ -81,11 +81,12 @@ public class DownloadTask extends DefaultTask {
     }
 
     @Input
-    public int getPort() {
+    @Optional
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 
