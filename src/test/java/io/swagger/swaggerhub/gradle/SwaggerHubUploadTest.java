@@ -14,9 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -42,16 +40,16 @@ public class SwaggerHubUploadTest {
     @Rule
     public final TemporaryFolder testProjectDir = new TemporaryFolder();
     private File buildFile;
+    private Path inputFile;
     private String testInputAPI = "TestAPI.json";
     private static String UPLOAD_TASK = "swaggerhubUpload";
-    private String api = "TestAPI";
-    private String owner = "testUser";
-    private String version = "1.1.0";
-    private String host = "localhost";
-    private String port = "8089";
-    private String protocol = "http";
-    private String token = "dUmMyTokEn.1234abc";
-    private String inputFile;
+    private final String api = "TestAPI";
+    private final String owner = "testUser";
+    private final String version = "1.1.0";
+    private final String host = "localhost";
+    private final String port = "8089";
+    private final String protocol = "http";
+    private final String token = "dUmMyTokEn.1234abc";
     private String swagger;
 
     @Before
@@ -67,29 +65,29 @@ public class SwaggerHubUploadTest {
     @Test
     public void testUpload() throws IOException, URISyntaxException {
         copyInputFile(testInputAPI, testProjectDir.getRoot());
-        inputFile = String.format("%s/%s", testProjectDir.getRoot().toString(), testInputAPI);
-        swagger = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
+        inputFile = getInputFilePath(testInputAPI);
+        swagger = new String(Files.readAllBytes(inputFile), Charset.forName("UTF-8"));
 
         SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
                 .swagger(swagger)
                 .build();
 
-        setupServerMocking(request, host, port, protocol, token);
+        setupServerMocking(request, host, port, token);
         assertEquals(SUCCESS, runBuild(request));
     }
 
     @Test
     public void testUploadPrivate() throws IOException, URISyntaxException {
         copyInputFile(testInputAPI, testProjectDir.getRoot());
-        inputFile = String.format("%s/%s", testProjectDir.getRoot().toString(), testInputAPI);
-        swagger = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
+        inputFile = getInputFilePath(testInputAPI);
+        swagger = new String(Files.readAllBytes(inputFile), Charset.forName("UTF-8"));
 
         SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
                 .isPrivate(true)
                 .swagger(swagger)
                 .build();
 
-        setupServerMocking(request, host, port, protocol, token);
+        setupServerMocking(request, host, port, token);
         assertEquals(SUCCESS, runBuild(request));
     }
 
@@ -97,15 +95,15 @@ public class SwaggerHubUploadTest {
     public void testUploadYaml() throws Exception {
         testInputAPI = "TestAPI.yaml";
         copyInputFile(testInputAPI, testProjectDir.getRoot());
-        inputFile = String.format("%s/%s", testProjectDir.getRoot().toString(), testInputAPI);
-        swagger = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
+        inputFile = getInputFilePath(testInputAPI);
+        swagger = new String(Files.readAllBytes(inputFile), Charset.forName("UTF-8"));
 
         SwaggerHubRequest request = new SwaggerHubRequest.Builder(api, owner, version)
                 .format("yaml")
                 .swagger(swagger)
                 .build();
 
-        setupServerMocking(request, host, port, protocol, token);
+        setupServerMocking(request, host, port, token);
         assertEquals(SUCCESS, runBuild(request));
     }
 
@@ -122,61 +120,53 @@ public class SwaggerHubUploadTest {
     }
 
     private String createBuildFile(SwaggerHubRequest request) throws IOException {
+        // Convert Windows path to use slashes for Gradle config
+        String filePath = inputFile.toString().replace("\\", "/");
+
         String buildFileContent =  "plugins { id 'io.swagger.swaggerhub' }\n" +
                 UPLOAD_TASK + " {\n" +
-                "    host \'" + host + "\'\n" +
+                "    host '" + host + "'\n" +
                 "    port " + port + "\n" +
-                "    protocol \'" + protocol + "\'\n" +
-                "    api \'" + request.getApi() + "\'\n" +
-                "    owner \'" + request.getOwner() + "\'\n" +
-                "    version \'" + request.getVersion() + "\'\n" +
+                "    protocol '" + protocol + "'\n" +
+                "    api '" + request.getApi() + "'\n" +
+                "    owner '" + request.getOwner() + "'\n" +
+                "    version '" + request.getVersion() + "'\n" +
                 getFormatSetting(request.getFormat()) +
                 getIsPrivateSetting(request.isPrivate()) +
-                "    inputFile \'" + inputFile + "\'\n" +
-                "    token \'" + token + "\'\n" +
+                "    inputFile '" + filePath + "'\n" +
+                "    token '" + token + "'\n" +
                 "}";
 
-        writeFile(buildFile, buildFileContent);
-
+        Files.write(buildFile.toPath(), buildFileContent.getBytes());
         return buildFileContent;
     }
 
     private String getIsPrivateSetting(Boolean isPrivate) {
         // false is default, so only include if set to true
-        return isPrivate ? String.format("   isPrivate %s\n", Boolean.toString(isPrivate)) : "";
+        return isPrivate ? String.format("   isPrivate %s\n", isPrivate) : "";
     }
 
     private String getFormatSetting(String format) {
         // json is default, so only include if set to yaml
-        return StringUtils.isNotBlank(format) && format.equals("yaml") ? String.format("   format \'%s\'\n", format) : "";
-    }
-
-    private void writeFile(File destination, String content) throws IOException {
-        BufferedWriter output = null;
-        try {
-            output = new BufferedWriter(new FileWriter(destination));
-            output.write(content);
-        } finally {
-            if (output != null) {
-                output.close();
-            }
-        }
+        return StringUtils.isNotBlank(format) && format.equals("yaml") ? String.format("   format '%s'\n", format) : "";
     }
 
     private void copyInputFile(String originalFile, File outputDir) throws IOException, URISyntaxException {
-        String outputFilePath = outputDir.getPath() + "/" + originalFile;
-        Path copied = Paths.get(outputFilePath);
+        Path copied = Paths.get(outputDir.getPath(), originalFile);
         Path originalFilePath = Paths.get(ClassLoader.getSystemClassLoader().getResource(originalFile).toURI());
         Files.copy(originalFilePath, copied, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    private UrlPathPattern setupServerMocking(SwaggerHubRequest request, String host, String port, String protocol, String token) {
+    private Path getInputFilePath(String filename) {
+        return Paths.get(testProjectDir.getRoot().toString(), filename);
+    }
+
+    private UrlPathPattern setupServerMocking(SwaggerHubRequest request, String host, String port, String token) {
         String api = request.getApi();
         String owner = request.getOwner();
         String version = request.getVersion();
         String format = request.getFormat();
         String isPrivate = Boolean.toString(request.isPrivate());
-
 
         startMockServer(Integer.parseInt(port));
 
