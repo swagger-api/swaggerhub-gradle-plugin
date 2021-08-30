@@ -23,6 +23,7 @@ import java.nio.file.Paths;
  * Downloads API definition from SwaggerHub
  */
 public class DownloadTask extends DefaultTask {
+    private static final Logger LOGGER = Logging.getLogger(DownloadTask.class);
     private String owner;
     private String api;
     private String version;
@@ -30,9 +31,8 @@ public class DownloadTask extends DefaultTask {
     private String outputFile;
     private String format = "json";
     private String host = "api.swaggerhub.com";
-    private int port = 443;
+    private Integer port = 443;
     private String protocol = "https";
-    private static Logger LOGGER = Logging.getLogger(DownloadTask.class);
 
     @Input
     public String getOwner() {
@@ -82,11 +82,11 @@ public class DownloadTask extends DefaultTask {
 
     @Input
     @Optional
-    public int getPort() {
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 
