@@ -7,10 +7,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS;
@@ -21,7 +22,6 @@ public class SwaggerHubDownloadTest {
     @Rule
     public final TemporaryFolder testProjectDir = new TemporaryFolder();
     private File buildFile;
-    private String outputFile;
 
     @Before
     public void setup() throws IOException {
@@ -30,18 +30,19 @@ public class SwaggerHubDownloadTest {
 
     @Test
     public void testSwaggerHubDownloadTask() throws IOException {
-        outputFile = testProjectDir.getRoot().toString() + "/testAPI.json";
-        String downloadTask = "swaggerhubDownload";
+        Path outputFile = Paths.get(testProjectDir.getRoot().toString(), "testAPI.json");
+        String filePath = outputFile.toString().replace("\\", "/");
 
+        String downloadTask = "swaggerhubDownload";
         String buildFileContent = "plugins { id 'io.swagger.swaggerhub' }\n" +
                 downloadTask + " {\n" +
-                "    api \'PetStoreAPI\'\n" +
-                "    owner \'jsfrench\'\n" +
-                "    version \'1.0.0\'\n" +
-                "    outputFile \'" + outputFile + "\'\n" +
+                "    api 'PetStoreAPI'\n" +
+                "    owner 'jsfrench'\n" +
+                "    version '1.0.0'\n" +
+                "    outputFile '" + filePath + "'\n" +
                 "}";
 
-        writeFile(buildFile, buildFileContent);
+        Files.write(buildFile.toPath(), buildFileContent.getBytes());
 
         BuildResult result = GradleRunner.create()
                 .withPluginClasspath()
@@ -50,18 +51,6 @@ public class SwaggerHubDownloadTest {
                 .build();
 
         assertEquals(SUCCESS, result.task(":" + downloadTask).getOutcome());
-        assertTrue(new File(outputFile).exists());
-    }
-
-    private void writeFile(File destination, String content) throws IOException {
-        BufferedWriter output = null;
-        try {
-            output = new BufferedWriter(new FileWriter(destination));
-            output.write(content);
-        } finally {
-            if (output != null) {
-                output.close();
-            }
-        }
+        assertTrue(Files.exists(outputFile));
     }
 }
