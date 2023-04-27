@@ -42,6 +42,8 @@ project.ext.pluginId    = 'io.swagger.swaggerhub'
 project.ext.scm         = 'scm:git@github.com:swagger-api/swaggerhub-gradle-plugin.git'
 project.ext.url         = 'https://github.com/swagger-api/swaggerhub-gradle-plugin'
 
+version=1.0.1
+
 // Configuration for: java-gradle-plugin
 gradlePlugin {
     plugins {
