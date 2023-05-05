@@ -22,12 +22,12 @@ repositories {
 
 dependencies {
     implementation gradleApi()
-    implementation group: 'com.squareup.okhttp', name: 'okhttp', version:'2.7.5'
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version:'4.10.0'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version:'3.12.0'
-    testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version:'2.27.2'
+    testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8-standalone', version:'2.35.0'
     testImplementation gradleTestKit()
     testImplementation 'junit:junit:4.13'
-    testImplementation group: 'io.swagger', name: 'swagger-parser', version:'1.0.55'
+    testImplementation group: 'io.swagger', name: 'swagger-parser', version:'1.0.65'
 }
 
 // * * * * * * * * * * * *
