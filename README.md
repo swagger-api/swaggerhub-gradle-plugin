@@ -26,28 +26,11 @@ The pattern of usage is likely to depend on whether a [code first or design firs
     - [swagger-inflector](https://github.com/swagger-api/swagger-inflector) to automatically wire up the API definition to the implementation and provide out-of-the-box mocking.
 
 ## Installation
-### Gradle 2.1 and higher
 
 ```
 plugins {
   id "io.swagger.swaggerhub" version "1.0.1"
 }
-```
-### Gradle 1.x and 2.0
-
-```
-buildscript {
-  repositories {
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
-  }
-  dependencies {
-    classpath "gradle.plugin.io.swagger:swaggerhub:1.0.1"
-  }
-}
-
-apply plugin: "io.swagger.swaggerhub"
 ```
 
 ## Tasks
