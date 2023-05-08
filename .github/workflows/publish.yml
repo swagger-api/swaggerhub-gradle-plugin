@@ -1,10 +1,9 @@
-name: Publish package to the Maven Central Repository
+name: Publish package SwaggerHub Gradle Plugin
 on:
-  workflow_dispatch:
-    branches:
-      - master
-jobs:
   release:
+    types: [published]
+jobs:
+  publish-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -12,11 +11,8 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '8'
-          server-id: ossrh
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
 
-      - name: Publish Gradle Plugin
+      - name: Publish plugin
         env:
           GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
           GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
