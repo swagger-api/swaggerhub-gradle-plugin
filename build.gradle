@@ -1,20 +1,9 @@
-// * * * * * * * * * * * *
-// Plugins
-// * * * * * * * * * * * *
-
 plugins {
     id 'groovy'
     id 'java-gradle-plugin'
+    id 'com.gradle.plugin-publish' version '1.2.0'
     id 'net.researchgate.release' version '2.8.1'
-    // Publishing publicly
-    id 'com.gradle.plugin-publish' version '0.14.0'
-    // Publishing to maven
-    id 'maven-publish'
 }
-
-// * * * * * * * * * * * *
-// Dependencies
-// * * * * * * * * * * * *
 
 repositories {
     mavenCentral()
@@ -22,57 +11,27 @@ repositories {
 
 dependencies {
     implementation gradleApi()
-    implementation group: 'com.squareup.okhttp', name: 'okhttp', version:'2.7.5'
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version:'4.10.0'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version:'3.12.0'
-    testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version:'2.27.2'
+    testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8-standalone', version:'2.35.0'
     testImplementation gradleTestKit()
-    testImplementation 'junit:junit:4.13'
-    testImplementation group: 'io.swagger', name: 'swagger-parser', version:'1.0.55'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation group: 'io.swagger', name: 'swagger-parser', version:'1.0.65'
 }
 
-// * * * * * * * * * * * *
-// Project configuration
-// * * * * * * * * * * * *
+version = '1.1.0'
+group = 'io.swagger'
 
-project.description     = 'Gradle Plugin for SwaggerHub'
-project.group           = 'io.swagger'
-
-project.ext.name        = 'swaggerhub'
-project.ext.pluginId    = 'io.swagger.swaggerhub'
-project.ext.scm         = 'scm:git@github.com:swagger-api/swaggerhub-gradle-plugin.git'
-project.ext.url         = 'https://github.com/swagger-api/swaggerhub-gradle-plugin'
-
-version=1.0.1
-
-// Configuration for: java-gradle-plugin
 gradlePlugin {
+    website = 'https://github.com/swagger-api/swaggerhub-gradle-plugin'
+    vcsUrl = 'https://github.com/swagger-api/swaggerhub-gradle-plugin'
     plugins {
         swaggerhub {
-            id = project.pluginId
+            id = 'io.swagger.swaggerhub'
             implementationClass = 'io.swagger.swaggerhub.SwaggerHubPlugin'
-        }
-    }
-}
-
-// * * * * * * * * * * * *
-// Publishing
-// * * * * * * * * * * * *
-
-
-// Publishing to plugins.gradle.org
-// --------------------------------
-
-// Configuration for: com.gradle.plugin-publish
-pluginBundle {
-    website = project.url
-    vcsUrl = project.scm
-    tags = ['swagger', 'swaggerhub', 'openapi', 'api']
-
-    plugins {
-        swaggerhubPlugin {
-            displayName = 'SwaggerHub Gradle Plugin '
-            description = project.description
-            id          = project.pluginId
+            displayName = 'SwaggerHub Gradle Plugin'
+            description = 'Gradle Plugin for SwaggerHub'
+            tags.set(['swagger', 'swaggerhub', 'openapi', 'api'])
         }
     }
 }
