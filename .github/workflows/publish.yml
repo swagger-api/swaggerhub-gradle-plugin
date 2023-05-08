@@ -1,7 +1,7 @@
 name: Publish package SwaggerHub Gradle Plugin
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+
 jobs:
   publish-release:
     runs-on: ubuntu-latest
