@@ -1,4 +1,4 @@
-name: Publish package SwaggerHub Gradle Plugin
+name: Build SwaggerHub Gradle Plugin
 on:
   push:
     branches: [ main ]
@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 jobs:
-  publish-release:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
