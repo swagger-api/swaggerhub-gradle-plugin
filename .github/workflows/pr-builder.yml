@@ -1,0 +1,21 @@
+name: Build SwaggerHub Gradle Plugin
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '8'
+
+      - name: Execute Gradle build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build --info
