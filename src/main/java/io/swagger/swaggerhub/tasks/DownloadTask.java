@@ -32,6 +32,7 @@ public class DownloadTask extends DefaultTask {
     private String host = "api.swaggerhub.com";
     private Integer port = 443;
     private String protocol = "https";
+    private Boolean resolved = false;
 
     @Input
     public String getOwner() {
@@ -119,15 +120,27 @@ public class DownloadTask extends DefaultTask {
         this.format = format;
     }
 
+    @Input
+    @Optional
+    public Boolean getResolved() {
+        return resolved;
+    }
+
+    public void setResolved(Boolean resolved) {
+        this.resolved = resolved;
+    }
+
+
     @TaskAction
     public void downloadDefinition() throws GradleException {
         SwaggerHubClient swaggerHubClient = new SwaggerHubClient(host, port, protocol, token);
 
-        LOGGER.info("Downloading from {}: api: {}, owner: {}, version: {}, format: {}, outputFile: {}",
-                host, api, owner, version, format, outputFile);
+        LOGGER.info("Downloading from {}: api: {}, owner: {}, version: {}, format: {}, resolved: {}, outputFile: {}",
+                host, api, owner, version, format, resolved, outputFile);
 
         SwaggerHubRequest swaggerHubRequest = new SwaggerHubRequest.Builder(api, owner, version)
                 .format(format)
+                .resolved(resolved)
                 .build();
 
         try {

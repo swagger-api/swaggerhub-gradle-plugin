@@ -59,7 +59,7 @@ Parameter | Description | Required | Default
 **`protocol`** | Protocol for SwaggerHub API,`http` or `https` | false | `https`
 **`port`** | Port to access SwaggerHub API| false | `443`
 **`oas`** | Version of the OpenApi Specification the definition adheres to | false | `2.0`
-
+**`resolved`** | Download a resolved version of the API definition              | false | `false`
 ***
 
 ### swaggerhubUpload
