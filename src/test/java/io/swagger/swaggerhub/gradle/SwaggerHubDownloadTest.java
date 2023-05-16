@@ -2,8 +2,10 @@ package io.swagger.swaggerhub.gradle;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.apache.commons.io.FileUtils;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,17 +13,23 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.anyUrl;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertTrue;
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class SwaggerHubDownloadTest {
@@ -44,10 +52,15 @@ public class SwaggerHubDownloadTest {
 
     @Test
     public void testSwaggerHubDownloadTask() throws IOException {
+        stubFor(WireMock.get(urlPathEqualTo("/apis/swagger-hub/test-api/1.0.0"))
+                .willReturn(aResponse().withBodyFile("TestAPI.json")));
         String buildFileContent = "plugins { id 'io.swagger.swaggerhub' }\n" +
                                   DOWNLOAD_TASK + " {\n" +
-                                  "    api 'PetStoreAPI'\n" +
-                                  "    owner 'jsfrench'\n" +
+                                  "    protocol 'http'\n" +
+                                  "    host 'localhost'\n" +
+                                  "    port " + wireMockRule.port() + "\n" +
+                                  "    api 'test-api'\n" +
+                                  "    owner 'swagger-hub'\n" +
                                   "    version '1.0.0'\n" +
                                   "    outputFile '" + filePath + "'\n" +
                                   "}";
@@ -58,6 +71,7 @@ public class SwaggerHubDownloadTest {
 
         assertEquals(SUCCESS, result.task(":" + DOWNLOAD_TASK).getOutcome());
         assertTrue(Files.exists(outputFile));
+        assertThat(FileUtils.readFileToString(outputFile.toFile(), UTF_8), containsString("This is a simple API"));
     }
 
     @Test
@@ -69,8 +83,8 @@ public class SwaggerHubDownloadTest {
                                   "    protocol 'http'\n" +
                                   "    host 'localhost'\n" +
                                   "    port " + wireMockRule.port() + "\n" +
-                                  "    api 'PetStoreAPI'\n" +
-                                  "    owner 'jsfrench'\n" +
+                                  "    api 'test-api'\n" +
+                                  "    owner 'swagger-hub'\n" +
                                   "    version '1.0.0'\n" +
                                   "    outputFile '" + filePath + "'\n" +
                                   "}\n";
@@ -79,7 +93,7 @@ public class SwaggerHubDownloadTest {
 
         executeTask();
 
-        WireMock.verify(getRequestedFor(urlEqualTo("/apis/jsfrench/PetStoreAPI/1.0.0?resolved=false")));
+        WireMock.verify(getRequestedFor(urlEqualTo("/apis/swagger-hub/registry-api/1.0.0?resolved=false")));
     }
 
     @Test
@@ -91,8 +105,8 @@ public class SwaggerHubDownloadTest {
                                   "    protocol 'http'\n" +
                                   "    host 'localhost'\n" +
                                   "    port " + wireMockRule.port() + "\n" +
-                                  "    api 'PetStoreAPI'\n" +
-                                  "    owner 'jsfrench'\n" +
+                                  "    api 'test-api'\n" +
+                                  "    owner 'swagger-hub'\n" +
                                   "    version '1.0.0'\n" +
                                   "    outputFile '" + filePath + "'\n" +
                                   "    resolved true\n" +
@@ -102,7 +116,7 @@ public class SwaggerHubDownloadTest {
 
         executeTask();
 
-        WireMock.verify(getRequestedFor(urlEqualTo("/apis/jsfrench/PetStoreAPI/1.0.0?resolved=true")));
+        WireMock.verify(getRequestedFor(urlEqualTo("/apis/swagger-hub/registry-api/1.0.0?resolved=true")));
     }
 
     private BuildResult executeTask() {
