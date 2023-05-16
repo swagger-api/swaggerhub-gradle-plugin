@@ -8,13 +8,12 @@ import org.gradle.api.GradleException;
 import org.gradle.api.logging.Logging;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Optional;
-import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
 import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -136,13 +135,8 @@ public class DownloadTask extends DefaultTask {
     public void downloadDefinition() throws GradleException {
         SwaggerHubClient swaggerHubClient = new SwaggerHubClient(host, port, protocol, token);
 
-        LOGGER.info("Downloading from " + host
-                + ": api:" + api
-                + ", owner:" + owner
-                + ", version:" + version
-                + ", format:" + format
-                + ", resolved:" + resolved
-                + ", outputFile:" + outputFile);
+        LOGGER.info("Downloading from {}: api: {}, owner: {}, version: {}, format: {}, resolved: {}, outputFile: {}",
+                host, api, owner, version, format, resolved, outputFile);
 
         SwaggerHubRequest swaggerHubRequest = new SwaggerHubRequest.Builder(api, owner, version)
                 .format(format)
@@ -154,16 +148,16 @@ public class DownloadTask extends DefaultTask {
             File file = new File(outputFile);
 
             setUpOutputDir(file);
-            Files.write(Paths.get(outputFile), swaggerJson.getBytes(Charset.forName("UTF-8")));
+            Files.write(Paths.get(outputFile), swaggerJson.getBytes(StandardCharsets.UTF_8));
         } catch (IOException | GradleException e) {
             throw new GradleException(e.getMessage(), e);
         }
     }
 
-    private void setUpOutputDir(File file) {
-        final File parentFile = file.getParentFile();
+    private void setUpOutputDir(File file) throws IOException {
+        File parentFile = file.getParentFile();
         if (parentFile != null) {
-            parentFile.mkdirs();
+            Files.createDirectories(file.getParentFile().toPath());
         }
     }
 }

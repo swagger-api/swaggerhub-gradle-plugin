@@ -11,6 +11,8 @@ import org.gradle.api.GradleException;
 import java.io.IOException;
 
 public class SwaggerHubClient {
+    private static final String DOWNLOAD_FAILED_ERROR = "Failed to download API definition: ";
+    private static final String UPLOAD_FAILED_ERROR = "Failed to upload API definition: ";
     private final OkHttpClient client;
     private final String host;
     private final int port;
@@ -29,22 +31,20 @@ public class SwaggerHubClient {
 
     public String getDefinition(SwaggerHubRequest swaggerHubRequest) throws GradleException {
         HttpUrl httpUrl = getDownloadUrl(swaggerHubRequest);
-        MediaType mediaType = MediaType.parse("application/" + swaggerHubRequest.getFormat());
-
+        MediaType mediaType = getMediaType(swaggerHubRequest);
         Request requestBuilder = buildGetRequest(httpUrl, mediaType);
 
-        final String jsonResponse;
-        try {
-            final Response response = client.newCall(requestBuilder).execute();
-            if (!response.isSuccessful()) {
-                throw new GradleException(String.format("Failed to download API definition: %s", response.body().string()));
+        try (Response response = client.newCall(requestBuilder).execute()) {
+            if (response.body() == null) {
+                throw new GradleException(DOWNLOAD_FAILED_ERROR + "Response body is empty");
+            } else if (!response.isSuccessful()) {
+                throw new GradleException(DOWNLOAD_FAILED_ERROR + response.body().string());
             } else {
-                jsonResponse = response.body().string();
+                return response.body().string();
             }
         } catch (IOException e) {
-            throw new GradleException("Failed to download API definition", e);
+            throw new GradleException(DOWNLOAD_FAILED_ERROR, e);
         }
-        return jsonResponse;
     }
 
     private Request buildGetRequest(HttpUrl httpUrl, MediaType mediaType) {
@@ -60,21 +60,18 @@ public class SwaggerHubClient {
 
     public void saveDefinition(SwaggerHubRequest swaggerHubRequest) throws GradleException {
         HttpUrl httpUrl = getUploadUrl(swaggerHubRequest);
-        MediaType mediaType = MediaType.parse("application/" + swaggerHubRequest.getFormat());
+        MediaType mediaType = getMediaType(swaggerHubRequest);
+        Request httpRequest = buildPostRequest(httpUrl, mediaType, swaggerHubRequest.getSwagger());
 
-        final Request httpRequest = buildPostRequest(httpUrl, mediaType, swaggerHubRequest.getSwagger());
-
-        try {
-            Response response = client.newCall(httpRequest).execute();
-            if (!response.isSuccessful()) {
-                throw new GradleException(
-                        String.format("Failed to upload definition: %s", response.body().string())
-                );
+        try (Response response = client.newCall(httpRequest).execute()) {
+            if (response.body() == null) {
+                throw new GradleException(UPLOAD_FAILED_ERROR + "Response body is empty");
+            } else if (!response.isSuccessful()) {
+                throw new GradleException(UPLOAD_FAILED_ERROR + response.body().string());
             }
         } catch (IOException e) {
-            throw new GradleException("Failed to upload definition", e);
+            throw new GradleException(UPLOAD_FAILED_ERROR, e);
         }
-        return;
     }
 
     private Request buildPostRequest(HttpUrl httpUrl, MediaType mediaType, String content) {
@@ -83,7 +80,7 @@ public class SwaggerHubClient {
                 .addHeader("Content-Type", mediaType.toString())
                 .addHeader("Authorization", token)
                 .addHeader("User-Agent", "swaggerhub-gradle-plugin")
-                .post(RequestBody.create(mediaType, content))
+                .post(RequestBody.create(content, mediaType))
                 .build();
     }
 
@@ -110,5 +107,14 @@ public class SwaggerHubClient {
                 .addPathSegment(APIS)
                 .addEncodedPathSegment(owner)
                 .addEncodedPathSegment(api);
+    }
+
+    private MediaType getMediaType(SwaggerHubRequest swaggerHubRequest) {
+        String headerFormat = "application/%s; charset=utf-8";
+        MediaType mediaType = MediaType.parse(String.format(headerFormat, swaggerHubRequest.getFormat()));
+        if (mediaType == null) {
+            mediaType = MediaType.parse(String.format(headerFormat, "json"));
+        }
+        return mediaType;
     }
 }

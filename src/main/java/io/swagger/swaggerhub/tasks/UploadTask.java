@@ -12,7 +12,7 @@ import org.gradle.api.tasks.TaskAction;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -142,17 +142,11 @@ public class UploadTask extends DefaultTask {
 
         swaggerHubClient = new SwaggerHubClient(host, port, protocol, token);
 
-        LOGGER.info("Uploading to " + host
-                + ": api: " + api
-                + ", owner: " + owner
-                + ", version: " + version
-                + ", inputFile: " + inputFile
-                + ", format: " + format
-                + ", isPrivate: " + isPrivate
-                + ", oas: " + oas);
+        LOGGER.info("Uploading to {}: api: {}, owner: {}, version: {}, inputFile: {}, format: {}, isPrivate: {}, oas: {} ",
+                host, api, owner, version, inputFile, format, isPrivate, oas);
 
         try {
-            String content = new String(Files.readAllBytes(Paths.get(inputFile)), Charset.forName("UTF-8"));
+            String content = new String(Files.readAllBytes(Paths.get(inputFile)), StandardCharsets.UTF_8);
 
             SwaggerHubRequest swaggerHubRequest = new SwaggerHubRequest.Builder(api, owner, version)
                     .swagger(content)
