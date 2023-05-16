@@ -90,6 +90,7 @@ public class SwaggerHubClient {
     private HttpUrl getDownloadUrl(SwaggerHubRequest swaggerHubRequest) {
         return getBaseUrl(swaggerHubRequest.getOwner(), swaggerHubRequest.getApi())
                 .addEncodedPathSegment(swaggerHubRequest.getVersion())
+                .addQueryParameter("resolved", String.valueOf(swaggerHubRequest.resolved()))
                 .build();
     }
 

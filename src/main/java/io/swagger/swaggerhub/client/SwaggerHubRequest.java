@@ -9,6 +9,7 @@ public class SwaggerHubRequest {
     private final String swagger;
     private final String oas;
     private final boolean isPrivate;
+    private final boolean resolved;
 
     public String getApi() {
         return api;
@@ -36,6 +37,10 @@ public class SwaggerHubRequest {
         return isPrivate;
     }
 
+    public boolean resolved() {
+        return resolved;
+    }
+
     private SwaggerHubRequest(Builder builder) {
         this.api = builder.api;
         this.owner = builder.owner;
@@ -44,6 +49,7 @@ public class SwaggerHubRequest {
         this.swagger = builder.swagger;
         this.isPrivate = builder.isPrivate;
         this.oas = builder.oas;
+        this.resolved = builder.resolved;
     }
 
     public static class Builder {
@@ -54,6 +60,7 @@ public class SwaggerHubRequest {
         private String swagger;
         private String oas;
         private boolean isPrivate;
+        private boolean resolved;
 
         public Builder(String api, String owner, String version) {
             this.api = api;
@@ -78,6 +85,11 @@ public class SwaggerHubRequest {
 
         public Builder oas(String oas) {
             this.oas = oas;
+            return this;
+        }
+
+        public Builder resolved(Boolean resolved) {
+            this.resolved = resolved;
             return this;
         }
 
