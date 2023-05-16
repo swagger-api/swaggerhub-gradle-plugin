@@ -93,7 +93,7 @@ public class SwaggerHubDownloadTest {
 
         executeTask();
 
-        WireMock.verify(getRequestedFor(urlEqualTo("/apis/swagger-hub/registry-api/1.0.0?resolved=false")));
+        WireMock.verify(getRequestedFor(urlEqualTo("/apis/swagger-hub/test-api/1.0.0?resolved=false")));
     }
 
     @Test
@@ -116,7 +116,7 @@ public class SwaggerHubDownloadTest {
 
         executeTask();
 
-        WireMock.verify(getRequestedFor(urlEqualTo("/apis/swagger-hub/registry-api/1.0.0?resolved=true")));
+        WireMock.verify(getRequestedFor(urlEqualTo("/apis/swagger-hub/test-api/1.0.0?resolved=true")));
     }
 
     private BuildResult executeTask() {
