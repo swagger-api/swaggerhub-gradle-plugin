@@ -29,7 +29,7 @@ The pattern of usage is likely to depend on whether a [code first or design firs
 
 ```
 plugins {
-  id "io.swagger.swaggerhub" version "1.0.1"
+  id "io.swagger.swaggerhub" version "1.1.0"
 }
 ```
 
@@ -40,7 +40,7 @@ plugins {
 ```
 swaggerhubDownload {
     api 'PetStoreAPI'
-    owner 'jsfrench'
+    owner 'swagger-hub'
     version '1.0.0'
     outputFile 'target/test/petStoreAPI.json'
 }
@@ -69,7 +69,7 @@ Parameter | Description | Required | Default
 ```
 swaggerhubUpload {
     api 'PetStoreAPI'
-    owner 'jsfrench'
+    owner 'swagger-hub'
     version '1.0.1-SNAPSHOT'
     inputFile 'target/petStoreAPI.json'
     token  'duMmyAPiKEy'
@@ -102,7 +102,7 @@ resolve {
 swaggerhubUpload {
     dependsOn resolve
     api 'PetStoreAPI'
-    owner 'jsfrench'
+    owner 'swagger-hub'
     version '1.0.1-SNAPSHOT'
     inputFile 'target/petStoreAPI.json'
     token  'duMmyAPiKEy'
