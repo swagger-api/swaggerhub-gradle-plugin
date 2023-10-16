@@ -18,15 +18,23 @@ public class SwaggerHubClient {
     private final int port;
     private final String token;
     private final String protocol;
+    private final Boolean onPremise;
+    private final String onPremiseAPISuffix;
     private static final String APIS = "apis";
 
 
-    public SwaggerHubClient(String host, int port, String protocol, String token) {
+    public SwaggerHubClient(String host, int port, String protocol, String token) { // TODO: Worth removing after due consideration
+        this(host, port, protocol, token, false, null);
+    }
+
+    public SwaggerHubClient(String host, int port, String protocol, String token, Boolean onPremise, String onPremiseAPISuffix) {
         client = new OkHttpClient();
         this.host = host;
         this.port = port;
         this.protocol = protocol;
         this.token = token;
+        this.onPremise = onPremise;
+        this.onPremiseAPISuffix = onPremiseAPISuffix;
     }
 
     public String getDefinition(SwaggerHubRequest swaggerHubRequest) throws GradleException {
@@ -104,6 +112,7 @@ public class SwaggerHubClient {
                 .scheme(protocol)
                 .host(host)
                 .port(port)
+                .addPathSegment(onPremise ? onPremiseAPISuffix : "")
                 .addPathSegment(APIS)
                 .addEncodedPathSegment(owner)
                 .addEncodedPathSegment(api);
