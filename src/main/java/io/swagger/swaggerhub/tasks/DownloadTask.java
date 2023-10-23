@@ -33,6 +33,8 @@ public class DownloadTask extends DefaultTask {
     private Integer port = 443;
     private String protocol = "https";
     private Boolean resolved = false;
+    private Boolean onPremise = false;
+    private String onPremiseAPISuffix = "/v1";
 
     @Input
     public String getOwner() {
@@ -130,13 +132,32 @@ public class DownloadTask extends DefaultTask {
         this.resolved = resolved;
     }
 
+    @Input
+    @Optional
+    public Boolean getOnPremise() {
+        return onPremise;
+    }
+
+    public void setOnPremise(Boolean onPremise) {
+        this.onPremise = onPremise;
+    }
+
+    @Input
+    @Optional
+    public String getOnPremiseAPISuffix() {
+        return onPremiseAPISuffix;
+    }
+
+    public void setOnPremiseAPISuffix(String onPremiseAPISuffix) {
+        this.onPremiseAPISuffix = onPremiseAPISuffix;
+    }
 
     @TaskAction
     public void downloadDefinition() throws GradleException {
-        SwaggerHubClient swaggerHubClient = new SwaggerHubClient(host, port, protocol, token);
+        SwaggerHubClient swaggerHubClient = new SwaggerHubClient(host, port, protocol, token, onPremise, onPremiseAPISuffix);
 
-        LOGGER.info("Downloading from {}: api: {}, owner: {}, version: {}, format: {}, resolved: {}, outputFile: {}",
-                host, api, owner, version, format, resolved, outputFile);
+        LOGGER.info("Downloading from {}: api: {}, owner: {}, version: {}, format: {}, resolved: {}, outputFile: {}, onPremise: {}, onPremiseAPISuffix: {}",
+                host, api, owner, version, format, resolved, outputFile, onPremise, onPremiseAPISuffix);
 
         SwaggerHubRequest swaggerHubRequest = new SwaggerHubRequest.Builder(api, owner, version)
                 .format(format)

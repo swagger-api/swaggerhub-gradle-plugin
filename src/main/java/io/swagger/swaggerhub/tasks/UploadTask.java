@@ -33,6 +33,8 @@ public class UploadTask extends DefaultTask {
     private String protocol = "https";
     private String format = "json";
     private String oas = "2.0";
+    private Boolean onPremise = false;
+    private String onPremiseAPISuffix = "/v1";
 
     private SwaggerHubClient swaggerHubClient;
 
@@ -137,13 +139,34 @@ public class UploadTask extends DefaultTask {
 
     public void setOas(String oas) { this.oas = oas; }
 
+    @Input
+    @Optional
+    public Boolean getOnPremise() {
+        return onPremise;
+    }
+
+    public void setOnPremise(Boolean onPremise) {
+        this.onPremise = onPremise;
+    }
+
+    @Input
+    @Optional
+    public String getOnPremiseAPISuffix() {
+        return onPremiseAPISuffix;
+    }
+
+    public void setOnPremiseAPISuffix(String onPremiseAPISuffix) {
+        this.onPremiseAPISuffix = onPremiseAPISuffix;
+    }
+
     @TaskAction
     public void uploadDefinition() throws GradleException {
 
-        swaggerHubClient = new SwaggerHubClient(host, port, protocol, token);
+        swaggerHubClient = new SwaggerHubClient(host, port, protocol, token, onPremise, onPremiseAPISuffix);
 
-        LOGGER.info("Uploading to {}: api: {}, owner: {}, version: {}, inputFile: {}, format: {}, isPrivate: {}, oas: {} ",
-                host, api, owner, version, inputFile, format, isPrivate, oas);
+        LOGGER.info("Uploading to {}: api: {}, owner: {}, version: {}, inputFile: {}, format: {}, isPrivate: {}, oas: {}," +
+                        " onPremise: {}, onPremiseAPISuffix: {} ",
+                host, api, owner, version, inputFile, format, isPrivate, oas, onPremise, onPremiseAPISuffix);
 
         try {
             String content = new String(Files.readAllBytes(Paths.get(inputFile)), StandardCharsets.UTF_8);
