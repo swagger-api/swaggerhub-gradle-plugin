@@ -34,7 +34,7 @@ public class UploadTask extends DefaultTask {
     private String format = "json";
     private String oas = "2.0";
     private Boolean onPremise = false;
-    private String onPremiseAPISuffix = "/v1";
+    private String onPremiseAPISuffix = "v1";
 
     private SwaggerHubClient swaggerHubClient;
 
