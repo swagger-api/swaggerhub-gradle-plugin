@@ -34,7 +34,7 @@ public class DownloadTask extends DefaultTask {
     private String protocol = "https";
     private Boolean resolved = false;
     private Boolean onPremise = false;
-    private String onPremiseAPISuffix = "/v1";
+    private String onPremiseAPISuffix = "v1";
 
     @Input
     public String getOwner() {
